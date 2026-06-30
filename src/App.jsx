@@ -1,21 +1,18 @@
-import { AuthProvider, useAuth } from "@auth/AuthContext";
+import { useEffect } from "react";
 import LoginPage from "@pages/public/LoginPage";
 
-function Shell() {
-  const { loading } = useAuth();
+function App() {
+  useEffect(() => {
+    fetch("/api/actuator/health")
+      .then((res) => res.json())
+      .catch(() => {});
+  }, []);
+
   return (
     <>
       <div>여운</div>
-      {loading ? <p>세션 확인 중…</p> : <LoginPage />}
+      <LoginPage />
     </>
-  );
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <Shell />
-    </AuthProvider>
   );
 }
 
