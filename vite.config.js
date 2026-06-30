@@ -1,28 +1,29 @@
-// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@pages": path.resolve(__dirname, "src/pages"),
-      "@utils": path.resolve(__dirname, "src/utils"),
-      "@styles": path.resolve(__dirname, "src/styles"), // ← 추가
-      "@components": path.resolve(__dirname, "src/components"),
-      "@router": path.resolve(__dirname, "src/router"),
-      "@store": path.resolve(__dirname, "src/store"),
-      "@api": path.resolve(__dirname, "src/api"),
-      "@assets": path.resolve(__dirname, "src/assets"),
+      "@pages": fileURLToPath(new URL("./src/pages", import.meta.url)),
+      "@utils": fileURLToPath(new URL("./src/util", import.meta.url)),
+      "@styles": fileURLToPath(new URL("./src/styles", import.meta.url)),
+      "@components": fileURLToPath(new URL("./src/components", import.meta.url)),
+      "@router": fileURLToPath(new URL("./src/router", import.meta.url)),
+      "@store": fileURLToPath(new URL("./src/store", import.meta.url)),
+      "@api": fileURLToPath(new URL("./src/api", import.meta.url)),
+      "@auth": fileURLToPath(new URL("./src/auth", import.meta.url)),
+      "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
     },
   },
   server: {
+    port: 3000,
+    strictPort: true,
     proxy: {
       "/api": {
-        target: "http://3.35.111.143:8080",
+        target: "http://localhost:8080",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

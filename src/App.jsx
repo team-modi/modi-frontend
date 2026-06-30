@@ -1,19 +1,7 @@
-import { useEffect } from "react";
-import LoginPage from "@pages/public/LoginPage";
+import { RouterProvider } from "react-router-dom";
+import { router } from "@router/LoginRoute";
+import "@styles/index.css";
 
-function App() {
-  useEffect(() => {
-    fetch("/api/actuator/health")
-      .then((res) => res.json())
-      .catch(() => {});
-  }, []);
-
-  return (
-    <>
-      <div>여운</div>
-      <LoginPage />
-    </>
-  );
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App;
