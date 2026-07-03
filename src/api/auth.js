@@ -9,6 +9,12 @@ export const login = async (provider, code) => {
   return data;
 };
 
+// 게스트 로그인
+export const guestLogin = async () => {
+  const data = await axiosInstance.post("/auth/guest");
+  return data;
+};
+
 // 로그아웃
 export const logout = async () => {
   const data = await axiosInstance.post("/auth/logout");
