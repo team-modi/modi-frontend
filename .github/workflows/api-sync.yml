@@ -13,7 +13,8 @@ name: api-sync
 #   - workflow_dispatch   : 수동 실행 (Actions 탭)
 #
 # 필요한 설정:
-#   - Secrets  > ANTHROPIC_API_KEY   (Claude Code 헤드리스 인증)   [필수]
+#   - Secrets  > CLAUDE_CODE_OAUTH_TOKEN  (Claude Max/Pro 구독으로 헤드리스 인증)   [필수]
+#       · 로컬에서 `claude setup-token`으로 발급. API 키(ANTHROPIC_API_KEY) 대신 구독을 씀.
 #   - Variables> BACKEND_SPEC_URL    (옵션 B 폴링용. dispatch만 쓰면 생략 가능)
 
 on:
@@ -90,7 +91,8 @@ jobs:
       - name: AI sync (Claude Code headless)
         if: steps.change.outputs.changed == 'true'
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Claude Max/Pro 구독 인증. `claude setup-token`으로 발급한 장기 OAuth 토큰.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           npm install -g @anthropic-ai/claude-code
           claude -p "$(cat api-sync/prompts/sync.md)" \
