@@ -1,0 +1,157 @@
+name: api-sync
+
+# 배치: modi-frontend/.github/workflows/api-sync.yml
+# 이 파일을 develop에 커밋하는 순간이 곧 "프론트에 API 동기화 CI가 생기는" 순간이다.
+#
+# 동작 요약:
+#   스펙 가져오기 → 바뀌었나? → (바뀜) changelog 생성 → Claude Code가 src/api 수정
+#   → lint + build 검증 → develop 대상 PR 생성 → 사람이 리뷰·머지 (자동 머지 없음)
+#
+# 트리거 3종:
+#   - repository_dispatch : 옵션 A. 백엔드 CI(publish-openapi)가 쏘는 이벤트로 즉시 실행
+#   - schedule            : 옵션 B. 배포된 스웨거를 매일 폴링 (백엔드 무수정)
+#   - workflow_dispatch   : 수동 실행 (Actions 탭)
+#
+# 필요한 설정:
+#   - Secrets  > CLAUDE_CODE_OAUTH_TOKEN  (Claude Max/Pro 구독으로 헤드리스 인증)   [필수]
+#       · 로컬에서 `claude setup-token`으로 발급. API 키(ANTHROPIC_API_KEY) 대신 구독을 씀.
+#   - Variables> BACKEND_SPEC_URL    (옵션 B 폴링용. dispatch만 쓰면 생략 가능)
+
+on:
+  repository_dispatch:
+    types: [openapi-updated]
+  schedule:
+    - cron: '0 0 * * *'        # 매일 00:00 UTC = 09:00 KST
+  workflow_dispatch:
+
+concurrency:
+  group: api-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  # dispatch면 payload의 spec_url, 폴링/수동이면 저장된 변수 사용
+  SPEC_URL: ${{ github.event.client_payload.spec_url || vars.BACKEND_SPEC_URL }}
+  OLD_SPEC: api-sync/spec/openapi.json     # "프론트가 아는 현재 계약" (레포에 커밋됨)
+  NEW_SPEC: api-sync/out/openapi.new.json
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      # repository_dispatch/schedule은 기본 브랜치를 체크아웃하므로,
+      # 백엔드 develop과 짝을 맞추려면 프론트도 develop을 명시해야 한다.
+      # (이걸 빼면 main 기준으로 수정하는 버그가 된다.)
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+          cache: npm
+      - run: npm ci
+
+      # ── 1. 스펙 가져와서 변경 감지 (정렬된 JSON으로 정규화 후 단순 diff) ──
+      - name: Fetch spec & detect change
+        id: change
+        run: |
+          mkdir -p api-sync/out api-sync/spec
+          curl -sSfL "$SPEC_URL" | python3 -m json.tool --sort-keys > "$NEW_SPEC"
+          if [ -f "$OLD_SPEC" ] && diff -q "$OLD_SPEC" "$NEW_SPEC" > /dev/null; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "스펙 변경 없음 - 종료"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── 2. 무엇이 바뀌었는지 changelog + breaking 여부 (oasdiff 도커 이미지) ──
+      - name: Diff changelog (oasdiff)
+        if: steps.change.outputs.changed == 'true'
+        id: classify
+        run: |
+          if [ -f "$OLD_SPEC" ]; then
+            docker run --rm -v "$PWD:/w" tufin/oasdiff changelog "/w/$OLD_SPEC" "/w/$NEW_SPEC" \
+              > api-sync/out/changelog.txt || true
+            if docker run --rm -v "$PWD:/w" tufin/oasdiff breaking "/w/$OLD_SPEC" "/w/$NEW_SPEC" --fail-on ERR > /dev/null 2>&1; then
+              echo "classification=non-breaking" >> "$GITHUB_OUTPUT"
+            else
+              echo "classification=breaking" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "(최초 실행 - 기준 스펙 없음)" > api-sync/out/changelog.txt
+            echo "classification=initial" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── 3. AI 동기화: 로컬에서 쓰는 그 Claude Code의 헤드리스 모드 ──
+      #    --allowedTools 로 능력을 제한한다: 읽기 + 편집 + lint/build 실행만.
+      - name: AI sync (Claude Code headless)
+        if: steps.change.outputs.changed == 'true'
+        env:
+          # Claude Max/Pro 구독 인증. `claude setup-token`으로 발급한 장기 OAuth 토큰.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude -p "$(cat api-sync/prompts/sync.md)" \
+            --allowedTools "Read,Grep,Glob,Edit,Bash(npm run lint*),Bash(npm run build*)" \
+            --max-turns 30 \
+            || echo "agent ended non-zero (검증 단계에서 판정)"
+
+      # ── 4. 가드레일: AI가 src/api와 하네스 산출물 밖을 건드렸으면 실패 ──
+      - name: Guardrail (blast radius)
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          bad=$(git diff --name-only | grep -Ev '^(src/api/|api-sync/)' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::허용 경로 밖 수정 감지:"
+            echo "$bad"
+            exit 1
+          fi
+
+      # ── 5. 검증: Playwright 없는 최소 게이트 = lint + build ──
+      #    (문법 오류, 존재하지 않는 import 정도를 잡는다. 의미 검증은 사람 리뷰의 몫)
+      - name: Verify (lint + build)
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          npm run lint
+          npm run build
+
+      # ── 6. 새 스펙을 "아는 계약"으로 승격하고 PR 본문 구성 ──
+      - name: Promote spec & build PR body
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          cp "$NEW_SPEC" "$OLD_SPEC"
+          {
+            echo "## API sync (\`${{ steps.classify.outputs.classification }}\`)"
+            echo
+            echo "### Spec changelog"
+            echo '```'
+            cat api-sync/out/changelog.txt
+            echo '```'
+            echo
+            echo "### AI sync notes"
+            cat api-sync/out/sync-notes.md 2>/dev/null || echo "_수정 불필요 (스펙만 갱신)_"
+            echo
+            echo "> 검증은 lint+build까지만 수행됨. 동작 확인은 리뷰어의 몫입니다."
+          } > api-sync/out/pr-body.md
+
+      # ── 7. develop 대상 PR 생성 (자동 머지 없음 — 머지는 사람이) ──
+      - name: Create PR
+        if: steps.change.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          # 기본 GITHUB_TOKEN 사용 - 추가 시크릿 불필요.
+          base: develop                              # PR 대상 = 프론트 develop
+          branch: api-sync/${{ github.run_id }}
+          commit-message: 'chore(api): sync with backend spec'
+          title: 'chore(api): sync with backend spec (${{ steps.classify.outputs.classification }})'
+          body-path: api-sync/out/pr-body.md
+          labels: |
+            api-sync
+            ${{ steps.classify.outputs.classification }}
+          add-paths: |
+            api-sync/spec/**
+            src/api/**
