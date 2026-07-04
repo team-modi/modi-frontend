@@ -1042,6 +1042,28 @@
     },
     "openapi": "3.1.0",
     "paths": {
+        "/api/v1/auth/guest": {
+            "post": {
+                "description": "\uc18c\uc15c \uc778\uc99d \uc5c6\uc774 \uc784\uc2dc \uc0ac\uc6a9\uc790\ub97c \uc989\uc2dc \uc0dd\uc131\ud558\uace0 \uc790\uccb4 JWT\ub97c \ubc1c\uae09\ud55c\ub2e4(\uac00\uc785 \uacb8\uc6a9).\n- \uc694\uccad body \uc5c6\uc74c. \ud638\ucd9c\ud560 \ub54c\ub9c8\ub2e4 \uc0c8 \uac8c\uc2a4\ud2b8 \uc0ac\uc6a9\uc790\uac00 \uc0dd\uc131\ub41c\ub2e4(\ub2c9\ub124\uc784 \"\uac8c\uc2a4\ud2b8\", \ud504\ub85c\ud544 \ubbf8\uc644).\n- \uc751\ub2f5: \uc18c\uc15c \ub85c\uadf8\uc778\uacfc \ub3d9\uc77c\ud558\uac8c `access`\u00b7`refresh` \ud1a0\ud070\uc744 **HttpOnly \ucfe0\ud0a4**\ub85c \ub0b4\ub824\uc8fc\uace0, `accessToken`\uc740 \ubcf8\ubb38\uc5d0\ub3c4 \ud568\uaed8 \ubc18\ud658\ud55c\ub2e4.\n- \uc774 \ud1a0\ud070\uc73c\ub85c \uae30\ub85d \ub4f1 **\ub85c\uadf8\uc778 \uc804\uc6a9 API\ub97c \uadf8\ub300\ub85c \ud638\ucd9c**\ud560 \uc218 \uc788\ub2e4. \uc774\ud6c4 \ud504\ub85c\ud544 \uc218\uc815(`PUT /api/v1/users/me/profile`)\uc73c\ub85c \uc815\ubcf4\ub97c \ucc44\uc6b8 \uc218 \uc788\ub2e4.\n- `provider`\ub294 `guest`\ub85c \ub0b4\ub824\uac04\ub2e4. \uc131\uacf5\uc740 \ud56d\uc0c1 200(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158).",
+                "operationId": "guestLogin",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseTokenResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778",
+                "tags": [
+                    "Auth"
+                ]
+            }
+        },
         "/api/v1/auth/login/{provider}": {
             "post": {
                 "description": "FE \uc8fc\ub3c4 \ud50c\ub85c\uc6b0. FE\uac00 \uc18c\uc15c \uc778\uac00\ub97c \ub9c8\uce5c \ub4a4 \ucf5c\ubc31\uc5d0\uc11c \ubc1b\uc740 authorization code\ub97c \uadf8\ub300\ub85c \ubcf4\ub0b8\ub2e4.\n- Path `provider`: `kakao` | `google` (\uc18c\ubb38\uc790).\n- Body: `code`(\uc18c\uc15c \uc778\uac00 \ucf54\ub4dc), `redirectUri`(\uc18c\uc15c \ucf58\uc194\u00b7\uc11c\ubc84 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\uc5d0 \ub4f1\ub85d\ub41c \uac12\uacfc \uc815\ud655\ud788 \uc77c\uce58\ud574\uc57c \ud568. \ubd88\uc77c\uce58 \uc2dc 400 INVALID_REDIRECT_URI).\n- \ucd5c\ucd08 \ub85c\uadf8\uc778\uc774\uba74 \ud68c\uc6d0\uc744 \uc790\ub3d9 \uc0dd\uc131(\uac00\uc785 \uacb8\uc6a9), \uc774\ud6c4\uc5d4 \uae30\uc874 \ud68c\uc6d0\uc73c\ub85c \ub85c\uadf8\uc778.\n- \uc751\ub2f5: `access`\u00b7`refresh` \ud1a0\ud070\uc744 **HttpOnly \ucfe0\ud0a4**\ub85c \ub0b4\ub824\uc900\ub2e4. \ube0c\ub77c\uc6b0\uc800 \ud074\ub77c\uc774\uc5b8\ud2b8\ub294 \uc774\ud6c4 \uc694\uccad\uc5d0 `credentials: 'include'`\ub9cc \ud558\uba74 \ub418\uace0 \ud1a0\ud070\uc744 \uc9c1\uc811 \uc800\uc7a5\ud560 \ud544\uc694\uac00 \uc5c6\ub2e4. \ube44\ucfe0\ud0a4 \ud074\ub77c\uc774\uc5b8\ud2b8(\ubaa8\ubc14\uc77c \ub4f1) \ud638\ud658\uc744 \uc704\ud574 `accessToken`\uc740 \uc751\ub2f5 \ubcf8\ubb38\uc5d0\ub3c4 \ud568\uaed8 \ubc18\ud658\ud55c\ub2e4.\n- \uc131\uacf5\uc740 \ud56d\uc0c1 200(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158).",
@@ -1648,7 +1670,7 @@
                 ]
             },
             "post": {
-                "description": "\uc804\uc2dc \uad00\ub78c \uae30\ub85d\uc744 \uc791\uc131\ud55c\ub2e4. \uac1c\ubc1c \uc911\uc5d0\ub294 X-User-Id \ud5e4\ub354\ub85c \uc0ac\uc6a9\uc790\ub97c \uc2dd\ubcc4\ud55c\ub2e4.",
+                "description": "\uc804\uc2dc \uad00\ub78c \uae30\ub85d\uc744 \uc791\uc131\ud55c\ub2e4. \ub85c\uadf8\uc778 \uc804\uc6a9 \u2014 access \ud1a0\ud070(\ucfe0\ud0a4/Bearer)\uc758 \uc0ac\uc6a9\uc790\ub85c \uae30\ub85d\uc744 \ub0a8\uae34\ub2e4. \uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778 \uc0ac\uc6a9\uc790\ub3c4 \ub3d9\uc77c\ud558\uac8c \uc0ac\uc6a9\ud560 \uc218 \uc788\ub2e4.",
                 "operationId": "create",
                 "requestBody": {
                     "content": {
