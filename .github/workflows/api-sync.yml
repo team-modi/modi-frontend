@@ -45,9 +45,11 @@ jobs:
       # repository_dispatch/schedule은 기본 브랜치를 체크아웃하므로,
       # 백엔드 develop과 짝을 맞추려면 프론트도 develop을 명시해야 한다.
       # (이걸 빼면 main 기준으로 수정하는 버그가 된다.)
+      # 단 workflow_dispatch(수동)면 dispatch한 브랜치를 체크아웃한다 —
+      # 워크플로 변경을 머지 전에 그 브랜치에서 라이브로 검증할 수 있게. 자동 트리거는 develop 고정.
       - uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref_name || 'develop' }}
 
       - uses: actions/setup-node@v4
         with:
