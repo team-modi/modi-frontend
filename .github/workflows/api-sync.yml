@@ -4,7 +4,7 @@ name: api-sync
 # 이 파일을 develop에 커밋하는 순간이 곧 "프론트에 API 동기화 CI가 생기는" 순간이다.
 #
 # 동작 요약:
-#   스펙 가져오기 → 바뀌었나? → (바뀜) changelog 생성 → Claude Code가 src/api 수정
+#   스펙 가져오기 → 바뀌었나? → (바뀜) changelog 생성 → Claude Code가 src 수정(API 클라이언트+소비 지점)
 #   → lint + build 검증 → develop 대상 PR 생성 → 사람이 리뷰·머지 (자동 머지 없음)
 #
 # 트리거 3종:
@@ -95,7 +95,7 @@ jobs:
       # ── 3. AI 동기화(자가복구 포함): 로컬에서 쓰는 그 Claude Code의 헤드리스 모드 ──
       #    --allowedTools 로 능력을 제한한다: 읽기 + 편집/생성 + lint/build 실행만.
       #    (Write 포함 — sync-notes.md·impact.md 같은 산출물을 새로 만들려면 필요. 경계 밖은 가드레일이 되돌림)
-      #    AI는 자기 턴 안에서 lint/build를 직접 돌려, 실패하면 src/api 안에서 고쳐
+      #    AI는 자기 턴 안에서 lint/build를 직접 돌려, 실패하면 src/ 안에서 고쳐
       #    green이 될 때까지 반복한다(인세션 자가복구 루프). --max-turns 가 그 상한(유계).
       - name: AI sync (Claude Code headless, self-healing)
         if: steps.change.outputs.changed == 'true'
@@ -116,9 +116,9 @@ jobs:
       - name: Anti-cheat (no new suppression comments)
         if: steps.change.outputs.changed == 'true'
         run: |
-          if git diff -- src/api | grep -E '^\+' | grep -Eq 'eslint-disable|@ts-ignore|@ts-nocheck'; then
+          if git diff -- src | grep -E '^\+' | grep -Eq 'eslint-disable|@ts-ignore|@ts-nocheck'; then
             echo "::error::억제 주석(eslint-disable/@ts-ignore/@ts-nocheck)으로 통과 시도 감지 — 폐기"
-            git diff -- src/api | grep -E '^\+' | grep -E 'eslint-disable|@ts-ignore|@ts-nocheck'
+            git diff -- src | grep -E '^\+' | grep -E 'eslint-disable|@ts-ignore|@ts-nocheck'
             exit 1
           fi
 
@@ -129,8 +129,8 @@ jobs:
         id: guardrail
         if: steps.change.outputs.changed == 'true'
         run: |
-          bad=$(git diff --name-only | grep -Ev '^(src/api/|api-sync/)' || true)
-          new=$(git ls-files --others --exclude-standard | grep -Ev '^(src/api/|api-sync/)' || true)
+          bad=$(git diff --name-only | grep -Ev '^(src/|api-sync/)' || true)
+          new=$(git ls-files --others --exclude-standard | grep -Ev '^(src/|api-sync/)' || true)
           # 한 줄씩 안전하게 처리(파일명 공백·다중 파일 대응). while-read + 개별 인용.
           if [ -n "$bad" ]; then
             echo "::warning::경계 밖 편집 되돌리기:"; echo "$bad"
@@ -188,27 +188,30 @@ jobs:
           # 언급("auto-recovered 해당 없음")해도 오탐하지 않게 상단 3줄 + 정확 문자열로 한정.
           head -n 3 api-sync/out/sync-notes.md 2>/dev/null | grep -qF '<!-- auto-recovered -->' && recovered=true
 
+          # AI가 수정한 src 파일(배너·라벨 판정용). 경계가 src/ 전체라 api 클라이언트(src/api)뿐
+          # 아니라 소비 지점(컴포넌트/스토어)도 포함. spec은 위에서 승격됐으니 src만 센다.
+          SRC_CHANGED="$(git diff --name-only -- src || true)"
+          # src/api 밖(=소비 지점)을 손댔으면 touches-consumers — 리뷰어가 UI까지 확인하란 신호.
+          consumers="$(printf '%s\n' "$SRC_CHANGED" | grep -v '^$' | grep -Ev '^src/api/' || true)"
+
+          # 라벨 동적 조립: api-sync + 분류 + (자가복구) + (소비지점) [+ needs-human]
+          labels="api-sync,$CLASSIFICATION"
+          [ "$recovered" = "true" ] && labels="$labels,auto-recovered"
+          [ -n "$(printf '%s' "$consumers" | tr -d '[:space:]')" ] && labels="$labels,touches-consumers"
+
           if [ "$GREEN" = "true" ]; then
             echo "draft=false" >> "$GITHUB_OUTPUT"
             echo "title=chore(api): sync with backend spec ($CLASSIFICATION)" >> "$GITHUB_OUTPUT"
-            if [ "$recovered" = "true" ]; then
-              echo "labels=api-sync,$CLASSIFICATION,auto-recovered" >> "$GITHUB_OUTPUT"
-            else
-              echo "labels=api-sync,$CLASSIFICATION" >> "$GITHUB_OUTPUT"
-            fi
+            echo "labels=$labels" >> "$GITHUB_OUTPUT"
           else
             echo "draft=true" >> "$GITHUB_OUTPUT"
             echo "title=chore(api): sync FAILED — needs human ($CLASSIFICATION)" >> "$GITHUB_OUTPUT"
-            echo "labels=api-sync,$CLASSIFICATION,needs-human" >> "$GITHUB_OUTPUT"
+            echo "labels=$labels,needs-human" >> "$GITHUB_OUTPUT"
           fi
-
-          # AI가 실제로 수정한 src/api 파일 목록(한눈에 배너 "코드 반영" 판정용).
-          # NEW_SPEC를 OLD_SPEC로 승격한 뒤라, spec 파일은 제외하고 src/api만 센다.
-          SRC_API_CHANGED="$(git diff --name-only -- src/api || true)"
 
           # FE 친화 PR 본문 생성: changelog.json 표 + AI impact.md 조인(불일치 시 폴백).
           # 로직은 api-sync/build_pr_body.py 한 곳에서 관리(표 형식/한글매핑은 그 파일만 고치면 됨).
-          SRC_API_CHANGED="$SRC_API_CHANGED" RECOVERED="$recovered" python3 api-sync/build_pr_body.py > /dev/null
+          SRC_CHANGED="$SRC_CHANGED" RECOVERED="$recovered" python3 api-sync/build_pr_body.py > /dev/null
 
       # ── 7. develop 대상 PR 생성 (자동 머지 없음 — 머지는 사람이) ──
       #    green이면 일반 PR, 실패면 draft + needs-human 으로 "조용한 죽음" 방지.
@@ -230,7 +233,7 @@ jobs:
           labels: ${{ steps.prep.outputs.labels }}
           add-paths: |
             api-sync/spec/**
-            src/api/**
+            src/**
 
       # ── 8. 슬랙 알림: 프론트 개발자 채널로 "리뷰 부탁" 쏘기 ──
       #    SLACK_BOT_TOKEN 시크릿이 없으면 조용히 skip(선택 기능). PR이 실제로 생성/갱신됐을 때만.
