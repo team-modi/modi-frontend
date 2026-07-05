@@ -12,7 +12,7 @@ CLASSIFICATION = os.environ.get("CLASSIFICATION", "")
 GREEN = os.environ.get("GREEN") == "true"
 RECOVERED = os.environ.get("RECOVERED") == "true"
 REVERTED = os.environ.get("REVERTED", "")
-SRC_API_CHANGED = os.environ.get("SRC_API_CHANGED", "")   # AI가 수정한 src/api 파일 목록(줄바꿈)
+SRC_CHANGED = os.environ.get("SRC_CHANGED", "")   # AI가 수정한 src 파일 목록(줄바꿈, api 클라이언트+소비 지점)
 AUTHOR = os.environ.get("AUTHOR_NAME", "").strip()
 
 def load(name, default=""):
@@ -97,11 +97,16 @@ for idx, c in enumerate(changes, 1):
     buckets[category(c)].append((idx, c))
 n_add, n_chg, n_del = len(buckets["added"]), len(buckets["changed"]), len(buckets["deleted"])
 
-src_files = [f for f in SRC_API_CHANGED.splitlines() if f.strip()]
+src_files = [f for f in SRC_CHANGED.splitlines() if f.strip()]
+api_files = [f for f in src_files if f.startswith("src/api/")]
+consumer_files = [f for f in src_files if not f.startswith("src/api/")]   # 소비 지점(컴포넌트/스토어/페이지)
 if not GREEN:
     status = "🚨 **AI 자동 반영 실패 — 사람 확인 필요 (draft PR)**"
-elif src_files:
-    status = f"✏️ AI가 `src/api` **{len(src_files)}개 파일** 수정 — 리뷰 필요"
+elif consumer_files:
+    status = (f"⚠️ AI가 `src` **{len(src_files)}개** 수정 — 그중 **소비 지점(컴포넌트/스토어) {len(consumer_files)}개 포함**. "
+              "🤖 추정 변경이니 **반드시 리뷰**")
+elif api_files:
+    status = f"✏️ AI가 API 클라이언트(`src/api`) **{len(api_files)}개** 수정 — 리뷰 필요"
 else:
     status = "✅ 스펙만 갱신 · 프론트 코드 변경 없음"
 
@@ -145,6 +150,13 @@ if sections:
 else:
     o.append("_(엔드포인트 레벨 변경 없음 — 스키마 내부 변경만)_")
 o.append("")
+
+if consumer_files:
+    o.append("### 🔧 AI가 손댄 소비 지점 (API 클라이언트 밖 — 반드시 리뷰)")
+    o.append("> 아래 화면 코드는 AI 추정 변경입니다. 실제 동작·UX를 반드시 확인하세요.")
+    for f in consumer_files:
+        o.append(f"- `{f}`")
+    o.append("")
 
 o.append("### 🤖 AI sync notes")
 o.append(sync_notes if sync_notes else "_수정 불필요 (스펙만 갱신)_")
