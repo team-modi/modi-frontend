@@ -292,7 +292,7 @@ jobs:
               changed.setdefault((c.get("operation", ""), c.get("path", "")), []).append(c)
           lines  = [f"+ [추가] {c.get('operation','')} {c.get('path','')}" for c in added]
           lines += [f"- [삭제] {c.get('operation','')} {c.get('path','')}" for c in deleted]
-          lines += [f"~ [변경] {op} {p} ({len(cs)}건)" for (op, p), cs in changed.items()]
+          lines += [f"~ [변경] {op} {p} (세부 변경 {len(cs)}건)" for (op, p), cs in changed.items()]
           change_list = "\n".join(lines) if lines else ("(최초 발행 — 전체 스펙)" if cls == "initial" else "(엔드포인트 레벨 변경 없음)")
 
           # 4) 실패 시 상단 배너
