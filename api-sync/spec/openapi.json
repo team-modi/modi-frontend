@@ -583,27 +583,15 @@
             },
             "RecordCreateRequest": {
                 "properties": {
-                    "aiKeywords": {
-                        "items": {
-                            "minLength": 1,
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    "aiSummary": {
-                        "type": "string"
-                    },
-                    "cardPhrase": {
-                        "type": "string"
-                    },
                     "content": {
-                        "maxLength": 5000,
+                        "maxLength": 300,
                         "minLength": 0,
                         "type": "string"
                     },
                     "emotionCodes": {
                         "items": {
-                            "minLength": 1,
+                            "maxLength": 10,
+                            "minLength": 0,
                             "type": "string"
                         },
                         "minItems": 1,
@@ -616,16 +604,6 @@
                     "media": {
                         "items": {
                             "$ref": "#/components/schemas/RecordMediaRequest"
-                        },
-                        "type": "array"
-                    },
-                    "representativeEmotion": {
-                        "type": "string"
-                    },
-                    "userKeywords": {
-                        "items": {
-                            "minLength": 1,
-                            "type": "string"
                         },
                         "type": "array"
                     },
@@ -913,27 +891,15 @@
             },
             "RecordUpdateRequest": {
                 "properties": {
-                    "aiKeywords": {
-                        "items": {
-                            "minLength": 1,
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    "aiSummary": {
-                        "type": "string"
-                    },
-                    "cardPhrase": {
-                        "type": "string"
-                    },
                     "content": {
-                        "maxLength": 5000,
+                        "maxLength": 300,
                         "minLength": 0,
                         "type": "string"
                     },
                     "emotionCodes": {
                         "items": {
-                            "minLength": 1,
+                            "maxLength": 10,
+                            "minLength": 0,
                             "type": "string"
                         },
                         "minItems": 1,
@@ -942,16 +908,6 @@
                     "media": {
                         "items": {
                             "$ref": "#/components/schemas/RecordMediaRequest"
-                        },
-                        "type": "array"
-                    },
-                    "representativeEmotion": {
-                        "type": "string"
-                    },
-                    "userKeywords": {
-                        "items": {
-                            "minLength": 1,
-                            "type": "string"
                         },
                         "type": "array"
                     },
