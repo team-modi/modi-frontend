@@ -6,6 +6,12 @@ export const getExhibitionList = async (params) => {
   return data;
 };
 
+// 홈 배너 조회
+export const getExhibitionBanners = async () => {
+  const data = await axiosInstance.get("/exhibitions/banners");
+  return data;
+};
+
 // 전시 상세
 export const getDetailExhibition = async (exhibitionId) => {
   const data = await axiosInstance.get(`/exhibitions/${exhibitionId}`);
