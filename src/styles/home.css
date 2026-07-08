@@ -1,0 +1,128 @@
+.home-body {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: 20px;
+}
+
+.home-box-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.home-section-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+}
+
+.home-section-row {
+  display: flex;
+  gap: 24px;
+
+  overflow-x: auto;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+.home-section-row::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* =========BannerCarousel.jsx========== */
+.banner-carousel {
+  position: relative;
+  width: var(--app-width);
+}
+
+.banner-viewport {
+  overflow: hidden;
+}
+
+.banner-container {
+  display: flex;
+}
+
+.banner-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.banner-slide img {
+  width: var(--app-width);
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--color-surface-2, #e8e8e8);
+}
+
+.banner-gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+.banner-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  padding: 0 24px;
+  text-align: left;
+}
+
+.banner-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: pre-line;
+  margin: 0 0 14px;
+  color: #ffffff;
+}
+
+.banner-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.banner-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  z-index: 2;
+}
+
+.banner-dot {
+  width: 65px;
+  height: 6px;
+  border-radius: 7px;
+  padding: 0;
+  cursor: pointer;
+  flex: none;
+
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.banner-dot--active {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}

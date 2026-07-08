@@ -4,6 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 // api
 import { login } from "@api/auth";
 
+// components
+import Header from "@components/layout/Header";
+
 const KAKAO_AUTH_URL =
   "https://kauth.kakao.com/oauth/authorize" +
   `?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}` +
@@ -49,12 +52,20 @@ export default function LoginPage() {
     );
 
   return (
-    <main className="login-page">
-      <h1>여운</h1>
-      {status === "error" && <p role="alert">로그인에 실패했어요. 다시 시도해 주세요.</p>}
-      <button type="button" className="btn-kakao" onClick={handleLogin}>
-        카카오로 로그인
-      </button>
-    </main>
+    <div className="app-shell">
+      <Header type="sub" />
+      <div className="app-content login-content">
+        <div className="login-logo">Logo</div>
+        <div className="text-title-3" style={{ textAlign: "center" }}>
+          가입하고 나만의
+          <br />
+          여운을 남겨보세요
+        </div>
+        {status === "error" && <p role="alert">로그인에 실패했어요. 다시 시도해 주세요.</p>}
+        <button type="button" className="login-button" onClick={handleLogin}>
+          카카오로 로그인
+        </button>
+      </div>
+    </div>
   );
 }
