@@ -34,10 +34,32 @@
                 },
                 "type": "object"
             },
+            "ApiResponseCursorResponseNotificationItem": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/CursorResponseNotificationItem"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
             "ApiResponseMeResponse": {
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/MeResponse"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseNotificationSettingsResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/NotificationSettingsResponse"
                     },
                     "meta": {
                         "$ref": "#/components/schemas/Metadata"
@@ -98,6 +120,17 @@
                 },
                 "type": "object"
             },
+            "ApiResponseReadResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ReadResponse"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
             "ApiResponseRecordCreateResponse": {
                 "properties": {
                     "data": {
@@ -113,6 +146,17 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/RecordDetailResponse"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseSearchResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/SearchResponse"
                     },
                     "meta": {
                         "$ref": "#/components/schemas/Metadata"
@@ -302,6 +346,64 @@
                 },
                 "type": "object"
             },
+            "CursorResponse": {
+                "properties": {
+                    "content": {
+                        "description": "\uc774\ubc88 \ud398\uc774\uc9c0 \ud56d\ubaa9\ub4e4",
+                        "items": {},
+                        "type": "array"
+                    },
+                    "hasNext": {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc874\uc7ac \uc5ec\ubd80",
+                        "example": true,
+                        "type": "boolean"
+                    },
+                    "nextCursor": {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c. \ub9c8\uc9c0\ub9c9 \ud398\uc774\uc9c0\uba74 null.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "totalCount": {
+                        "description": "\uc870\uac74 \uae30\uc900 \uc804\uccb4 \uac74\uc218",
+                        "example": 56,
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "CursorResponseNotificationItem": {
+                "properties": {
+                    "content": {
+                        "description": "\uc774\ubc88 \ud398\uc774\uc9c0 \ud56d\ubaa9\ub4e4",
+                        "items": {
+                            "$ref": "#/components/schemas/NotificationItem"
+                        },
+                        "type": "array"
+                    },
+                    "hasNext": {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc874\uc7ac \uc5ec\ubd80",
+                        "example": true,
+                        "type": "boolean"
+                    },
+                    "nextCursor": {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c. \ub9c8\uc9c0\ub9c9 \ud398\uc774\uc9c0\uba74 null.",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "totalCount": {
+                        "description": "\uc870\uac74 \uae30\uc900 \uc804\uccb4 \uac74\uc218",
+                        "example": 56,
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "CustomCreateRequest": {
                 "properties": {
                     "artist": {
@@ -321,6 +423,10 @@
                             "PHOTO",
                             "MEDIA",
                             "SCULPTURE",
+                            "DESIGN",
+                            "CRAFT",
+                            "ARCHITECTURE",
+                            "PERFORMANCE",
                             "ETC"
                         ],
                         "example": "PHOTO",
@@ -352,7 +458,7 @@
                         ]
                     },
                     "place": {
-                        "description": "\uc804\uc2dc \uc7a5\uc18c\uba85. \uc120\ud0dd.",
+                        "description": "\uc804\uc2dc \uc7a5\uc18c\uba85(\uc9c1\uc811 \uc785\ub825). \uc120\ud0dd. venueId\uac00 \uc788\uc73c\uba74 \ubb34\uc2dc\ub41c\ub2e4.",
                         "example": "\uc131\uc218 \uac24\ub7ec\ub9ac",
                         "maxLength": 200,
                         "minLength": 0,
@@ -410,6 +516,15 @@
                         "maxLength": 100,
                         "minLength": 0,
                         "type": "string"
+                    },
+                    "venueId": {
+                        "description": "\uc804\uc2dc\uad00 ID(\uc804\uc2dc\uad00 \uac80\uc0c9 \uc120\ud0dd). \uc9c0\uc815 \uc2dc place\u00b7region\uc740 \uc804\uc2dc\uad00 \uac12\uc73c\ub85c \ud30c\uc0dd\ud558\uace0, \uc5c6\ub294 ID\uba74 404 VENUE_NOT_FOUND. venueId\uc640 place\ub294 \ub458 \uc911 \ud558\ub098.",
+                        "example": 7,
+                        "format": "int64",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     }
                 },
                 "required": [
@@ -427,6 +542,14 @@
                             "null"
                         ]
                     },
+                    "artistSummary": {
+                        "description": "\uc791\uac00 \uc694\uc57d. CUSTOM\uc740 \ub4f1\ub85d \uc791\uac00\uba85, CATALOG\ub294 null.",
+                        "example": "\uae40\ubbf8\uacbd \uc678 10\uc778",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "artists": {
                         "description": "\ucc38\uc5ec \uc791\uac00 \ubaa9\ub85d. \ub370\uc774\ud130 \uc5c6\uc73c\uba74 \ube48 \ubc30\uc5f4.",
                         "example": [
@@ -436,6 +559,11 @@
                             "type": "string"
                         },
                         "type": "array"
+                    },
+                    "bookmarked": {
+                        "description": "\uc694\uccad\uc790\uc758 \uad00\uc2ec \ub4f1\ub85d \uc5ec\ubd80(\ube44\ub85c\uadf8\uc778 false)",
+                        "example": true,
+                        "type": "boolean"
                     },
                     "category": {
                         "description": "\uce74\ud14c\uace0\ub9ac \ucf54\ub4dc",
@@ -477,6 +605,11 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "free": {
+                        "description": "\ubb34\ub8cc \uc5ec\ubd80",
+                        "example": true,
+                        "type": "boolean"
                     },
                     "gpsX": {
                         "description": "GPS \uacbd\ub3c4. \uc5c6\uc73c\uba74 null.",
@@ -560,6 +693,11 @@
                             "null"
                         ]
                     },
+                    "recorded": {
+                        "description": "\uc694\uccad\uc790\uac00 \uc774 \uc804\uc2dc\uc5d0 \ub300\ud55c \uae30\ub85d \ubcf4\uc720 \uc5ec\ubd80(\ube44\ub85c\uadf8\uc778 false). true\uba74 '\uae30\ub85d\ud558\uae30' \ubc84\ud2bc \ubd84\uae30.",
+                        "example": false,
+                        "type": "boolean"
+                    },
                     "region": {
                         "description": "\uc9c0\uc5ed \ucf54\ub4dc",
                         "example": "SEOUL",
@@ -628,6 +766,24 @@
                     "viewedAt": {
                         "format": "date",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Item": {
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "region": {
+                        "type": "string"
+                    },
+                    "venueId": {
+                        "format": "int64",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -757,30 +913,66 @@
                 },
                 "type": "object"
             },
-            "PageResponse": {
+            "NotificationItem": {
                 "properties": {
-                    "content": {
-                        "items": {},
-                        "type": "array"
+                    "body": {
+                        "type": "string"
                     },
-                    "hasNext": {
-                        "type": "boolean"
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
                     },
-                    "page": {
-                        "format": "int32",
-                        "type": "integer"
-                    },
-                    "size": {
-                        "format": "int32",
-                        "type": "integer"
-                    },
-                    "totalElements": {
+                    "notificationId": {
                         "format": "int64",
                         "type": "integer"
                     },
-                    "totalPages": {
-                        "format": "int32",
-                        "type": "integer"
+                    "read": {
+                        "type": "boolean"
+                    },
+                    "targetId": {
+                        "description": "\uc774\ub3d9 \ub300\uc0c1 id. REMIND=remindId, NOTICE=null",
+                        "format": "int64",
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "\uc54c\ub9bc \uc885\ub958",
+                        "enum": [
+                            "REMIND",
+                            "NOTICE"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "NotificationSettingsRequest": {
+                "properties": {
+                    "noticeEnabled": {
+                        "type": "boolean"
+                    },
+                    "remindEnabled": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "noticeEnabled",
+                    "remindEnabled"
+                ],
+                "type": "object"
+            },
+            "NotificationSettingsResponse": {
+                "properties": {
+                    "noticeEnabled": {
+                        "type": "boolean"
+                    },
+                    "remindEnabled": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -936,6 +1128,18 @@
                             "type": "string"
                         },
                         "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "ReadResponse": {
+                "properties": {
+                    "notificationId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "read": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -1316,6 +1520,17 @@
                 ],
                 "type": "object"
             },
+            "SearchResponse": {
+                "properties": {
+                    "venues": {
+                        "items": {
+                            "$ref": "#/components/schemas/Item"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
             "Side": {
                 "properties": {
                     "emotionCodes": {
@@ -1378,6 +1593,22 @@
                         "type": "integer"
                     },
                     "remindId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ToggleResponse": {
+                "properties": {
+                    "bookmarked": {
+                        "description": "\ud604\uc7ac \uad00\uc2ec \ub4f1\ub85d \uc5ec\ubd80(\ub4f1\ub85d true / \ud574\uc81c false)",
+                        "example": true,
+                        "type": "boolean"
+                    },
+                    "exhibitionId": {
+                        "description": "\ub300\uc0c1 \uc804\uc2dc ID",
+                        "example": 51,
                         "format": "int64",
                         "type": "integer"
                     }
@@ -1555,14 +1786,63 @@
         },
         "/api/v1/exhibitions": {
             "get": {
-                "description": "\ud544\ud130\u00b7\uc815\ub82c\u00b7\ud398\uc774\uc9c0\ub85c \uc804\uc2dc\ub97c \uc870\ud68c\ud55c\ub2e4. \ud544\ud130 \ubbf8\uc9c0\uc815 \uc2dc \uc624\ub298 \uc9c4\ud589 \uc911\uc778 \uc804\uc2dc\ub97c \uae30\ubcf8 \ub178\ucd9c\ud55c\ub2e4.\n\ube44\ub85c\uadf8\uc778\uc740 CATALOG\ub9cc, \ub85c\uadf8\uc778\uc740 CATALOG + \ubcf8\uc778 CUSTOM\uc744 \ud568\uaed8 \ubcf8\ub2e4.\n\uc778\uc99d\uc740 \uc120\ud0dd(Optional)\uc774\ub2e4 \u2014 Authorization \ud5e4\ub354\uac00 \uc5c6\uac70\ub098 \ud1a0\ud070\uc774 \ubb34\ud6a8\ud574\ub3c4 401\uc744 \ub0b4\uc9c0 \uc54a\uace0\n\ube44\ub85c\uadf8\uc778(\uc775\uba85)\uc73c\ub85c \ucde8\uae09\ud574 \uc870\ud68c\ub97c \uacc4\uc18d\ud55c\ub2e4.",
-                "operationId": "list_1",
+                "description": "\ud544\ud130\u00b7\uc815\ub82c\u00b7\ucee4\uc11c\ub85c \uc804\uc2dc\ub97c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). \ud544\ud130 \ubbf8\uc9c0\uc815 \uc2dc \uc624\ub298 \uc9c4\ud589 \uc911\uc778 \uc804\uc2dc\ub97c \uae30\ubcf8 \ub178\ucd9c\ud55c\ub2e4.\n\ube44\ub85c\uadf8\uc778\uc740 CATALOG\ub9cc, \ub85c\uadf8\uc778\uc740 CATALOG + \ubcf8\uc778 CUSTOM\uc744 \ud568\uaed8 \ubcf8\ub2e4(\ub85c\uadf8\uc778 \uc2dc bookmarked \uac1c\uc778\ud654).\n\uc778\uc99d\uc740 \uc120\ud0dd(Optional)\uc774\ub2e4 \u2014 Authorization \ud5e4\ub354\uac00 \uc5c6\uac70\ub098 \ud1a0\ud070\uc774 \ubb34\ud6a8\ud574\ub3c4 401\uc744 \ub0b4\uc9c0 \uc54a\uace0\n\ube44\ub85c\uadf8\uc778(\uc775\uba85)\uc73c\ub85c \ucde8\uae09\ud574 \uc870\ud68c\ub97c \uacc4\uc18d\ud55c\ub2e4.\n\uc815\ub82c\uc774 \ubc14\ub00c\uba74 \ucee4\uc11c\ub97c \ubc84\ub9ac\uace0 \ucc98\uc74c\ubd80\ud130 \uc7ac\uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c\uc758 \uc815\ub82c \ud310\ubcc4\uc790\uc640 sort\uac00 \ub2e4\ub974\uba74 INVALID_CURSOR).",
+                "operationId": "list_2",
                 "parameters": [
                     {
-                        "description": "\uc804\uc2dc\uba85\u00b7\uc804\uc2dc\uc7a5\uba85 \ubd80\ubd84 \uc77c\uce58",
+                        "description": "\uc804\uc2dc\uba85\u00b7\uc804\uc2dc\uc7a5\uba85 \ubd80\ubd84 \uc77c\uce58(\ucd5c\uc18c 2\uae00\uc790)",
                         "example": "\ubaa8\ub124",
                         "in": "query",
                         "name": "keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\uc139\uc158 \ud544\ud130",
+                        "example": "ending-soon",
+                        "in": "query",
+                        "name": "section",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "ending-soon",
+                                "opening-this-month",
+                                "free"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "opening-this-month \uae30\uac04 \ubc94\uc704(\uae30\ubcf8 month)",
+                        "example": "month",
+                        "in": "query",
+                        "name": "period",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "month",
+                                "week"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\uc9c0\uc5ed \ucf54\ub4dc \ucf64\ub9c8 \ub2e4\uc911(SEOUL,GYEONGGI \ub4f1)",
+                        "example": "SEOUL,GYEONGGI",
+                        "in": "query",
+                        "name": "region",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\uce74\ud14c\uace0\ub9ac \ucf54\ub4dc \ucf64\ub9c8 \ub2e4\uc911(PAINTING\u00b7PHOTO\u00b7MEDIA\u00b7SCULPTURE\u00b7DESIGN\u00b7CRAFT\u00b7ARCHITECTURE\u00b7PERFORMANCE\u00b7ETC)",
+                        "example": "PHOTO,MEDIA",
+                        "in": "query",
+                        "name": "category",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1579,27 +1859,7 @@
                         }
                     },
                     {
-                        "description": "\uc9c0\uc5ed \ucf54\ub4dc(SEOUL\u00b7GYEONGGI\u00b7BUSAN\u00b7DAEGU\u00b7ETC \ub4f1)",
-                        "example": "SEOUL",
-                        "in": "query",
-                        "name": "region",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "\uce74\ud14c\uace0\ub9ac \ucf54\ub4dc(PAINTING\u00b7PHOTO\u00b7MEDIA\u00b7SCULPTURE\u00b7ETC)",
-                        "example": "PHOTO",
-                        "in": "query",
-                        "name": "category",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "\uc815\ub82c \ucf54\ub4dc. latest=\uc2dc\uc791\uc77c \ucd5c\uc2e0\uc21c(\uae30\ubcf8), ending=\uc885\ub8cc\uc77c \uc784\ubc15\uc21c, popular=\uc870\ud68c\uc218 \ub9ce\uc740\uc21c",
+                        "description": "\uc815\ub82c \ucf54\ub4dc. latest=\uc2dc\uc791\uc77c \ucd5c\uc2e0\uc21c(\uae30\ubcf8), ending=\uc885\ub8cc\uc77c \uc784\ubc15\uc21c, popular=\uc870\ud68c\uc218 \ub9ce\uc740\uc21c, distance=\uac70\ub9ac\uc21c(lat\u00b7lng \ud544\uc218)",
                         "example": "latest",
                         "in": "query",
                         "name": "sort",
@@ -1608,30 +1868,51 @@
                             "enum": [
                                 "latest",
                                 "ending",
-                                "popular"
+                                "popular",
+                                "distance"
                             ],
                             "type": "string"
                         }
                     },
                     {
-                        "description": "Zero-based page index (0..N)",
+                        "description": "\uc704\ub3c4(sort=distance \ud544\uc218)",
+                        "example": 37.5033,
                         "in": "query",
-                        "name": "page",
+                        "name": "lat",
                         "required": false,
                         "schema": {
-                            "default": 0,
-                            "minimum": 0,
-                            "type": "integer"
+                            "format": "double",
+                            "type": "number"
                         }
                     },
                     {
-                        "description": "The size of the page to be returned",
+                        "description": "\uacbd\ub3c4(sort=distance \ud544\uc218)",
+                        "example": 126.9575,
+                        "in": "query",
+                        "name": "lng",
+                        "required": false,
+                        "schema": {
+                            "format": "double",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c(\uccab \ud398\uc774\uc9c0\ub294 \uc0dd\ub7b5)",
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\ud398\uc774\uc9c0 \ud06c\uae30(\uae30\ubcf8 20, \ucd5c\ub300 50)",
+                        "example": 20,
                         "in": "query",
                         "name": "size",
                         "required": false,
                         "schema": {
-                            "default": 20,
-                            "minimum": 1,
+                            "format": "int32",
                             "type": "integer"
                         }
                     }
@@ -1647,33 +1928,24 @@
                                             "data": {
                                                 "content": [
                                                     {
+                                                        "artistSummary": null,
+                                                        "bookmarked": false,
                                                         "category": "PAINTING",
+                                                        "dDay": 5,
                                                         "endDate": "2026-08-31",
                                                         "exhibitionId": 51,
+                                                        "free": false,
                                                         "place": "\uc608\uc220\uc758\uc804\ub2f9 \ud55c\uac00\ub78c\ubbf8\uc220\uad00",
                                                         "posterUrl": "https://cdn.modi.app/exhibitions/51/poster.jpg",
                                                         "region": "SEOUL",
                                                         "startDate": "2026-06-01",
                                                         "title": "\ubaa8\ub124: \ube5b\uc744 \uadf8\ub9ac\ub2e4",
                                                         "type": "CATALOG"
-                                                    },
-                                                    {
-                                                        "category": "PHOTO",
-                                                        "endDate": "2026-06-25",
-                                                        "exhibitionId": 108,
-                                                        "place": "\uc131\uc218 \uac24\ub7ec\ub9ac",
-                                                        "posterUrl": null,
-                                                        "region": "SEOUL",
-                                                        "startDate": "2026-06-20",
-                                                        "title": "\uce5c\uad6c\uc640 \ub2e4\ub140\uc628 \uc0ac\uc9c4\uc804",
-                                                        "type": "CUSTOM"
                                                     }
                                                 ],
-                                                "hasNext": false,
-                                                "page": 0,
-                                                "size": 20,
-                                                "totalElements": 2,
-                                                "totalPages": 1
+                                                "hasNext": true,
+                                                "nextCursor": "eyJzb3J0IjoibGF0ZXN0IiwibGFzdElkIjo1MX0",
+                                                "totalCount": 160
                                             },
                                             "meta": {
                                                 "errorCode": null,
@@ -1684,7 +1956,7 @@
                                     }
                                 },
                                 "schema": {
-                                    "$ref": "#/components/schemas/PageResponse"
+                                    "$ref": "#/components/schemas/CursorResponse"
                                 }
                             }
                         },
@@ -1694,8 +1966,8 @@
                         "content": {
                             "application/json": {
                                 "examples": {
-                                    "\ubbf8\uc815\uc758 \uc9c0\uc5ed \ucf54\ub4dc": {
-                                        "description": "\ubbf8\uc815\uc758 \uc9c0\uc5ed \ucf54\ub4dc",
+                                    "\uac70\ub9ac\uc21c\uc778\ub370 \uc88c\ud45c \uc5c6\uc74c": {
+                                        "description": "\uac70\ub9ac\uc21c\uc778\ub370 \uc88c\ud45c \uc5c6\uc74c",
                                         "value": {
                                             "data": null,
                                             "meta": {
@@ -1708,7 +1980,7 @@
                                 }
                             }
                         },
-                        "description": "INVALID_INPUT \u2014 region/category\uac00 \uc815\uc758\ub418\uc9c0 \uc54a\uc740 \ucf54\ub4dc\uc774\uac70\ub098, date\uac00 YYYY-MM-DD \ud615\uc2dd\uc774 \uc544\ub2d8"
+                        "description": "INVALID_INPUT \u2014 keyword 1\uae00\uc790, sort=distance\uc778\ub370 lat\u00b7lng \uc5c6\uc74c, \ubbf8\uc815\uc758 region/category/section \ucf54\ub4dc, date \ud615\uc2dd \uc624\ub958 / INVALID_CURSOR \u2014 \ucee4\uc11c-\uc815\ub82c \ubd88\uc77c\uce58\u00b7\uc190\uc0c1"
                     }
                 },
                 "summary": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9",
@@ -1875,7 +2147,7 @@
         },
         "/api/v1/exhibitions/{exhibitionId}": {
             "get": {
-                "description": "CATALOG\ub294 \uacf5\uac1c, CUSTOM\uc740 \ub4f1\ub85d\uc790 \ubcf8\uc778\ub9cc \uc870\ud68c \uac00\ub2a5. \uc778\uc99d\uc740 \uc120\ud0dd(Optional) \u2014\n\ube44\ub85c\uadf8\uc778\u00b7\ubb34\ud6a8 \ud1a0\ud070\uc774\uc5b4\ub3c4 CATALOG \uc804\uc2dc\ub294 \uc815\uc0c1 \uc870\ud68c\ub41c\ub2e4.",
+                "description": "CATALOG\ub294 \uacf5\uac1c, CUSTOM\uc740 \ub4f1\ub85d\uc790 \ubcf8\uc778\ub9cc \uc870\ud68c \uac00\ub2a5. \uc778\uc99d\uc740 \uc120\ud0dd(Optional) \u2014\n\ube44\ub85c\uadf8\uc778\u00b7\ubb34\ud6a8 \ud1a0\ud070\uc774\uc5b4\ub3c4 CATALOG \uc804\uc2dc\ub294 \uc815\uc0c1 \uc870\ud68c\ub41c\ub2e4. \ub85c\uadf8\uc778 \uc2dc bookmarked\u00b7recorded \uac1c\uc778\ud654 \ud544\ub4dc\ub97c \ucc44\uc6b4\ub2e4.",
                 "operationId": "detail",
                 "parameters": [
                     {
@@ -1900,14 +2172,17 @@
                                         "value": {
                                             "data": {
                                                 "address": "\uc11c\uc6b8\ud2b9\ubcc4\uc2dc \uc11c\ucd08\uad6c \ub0a8\ubd80\uc21c\ud658\ub85c 2406",
+                                                "artistSummary": null,
                                                 "artists": [
                                                     "\ud074\ub85c\ub4dc \ubaa8\ub124"
                                                 ],
+                                                "bookmarked": true,
                                                 "category": "PAINTING",
                                                 "description": "\uc778\uc0c1\uc8fc\uc758 \uac70\uc7a5 \ubaa8\ub124\uc758 \ub300\ud45c\uc791\uc744 \ub9cc\ub098\ub294 \ud2b9\ubcc4\uc804.",
                                                 "detailUrl": "https://culture.go.kr/exhibitions/51",
                                                 "endDate": "2026-08-31",
                                                 "exhibitionId": 51,
+                                                "free": true,
                                                 "gpsX": 127.0136,
                                                 "gpsY": 37.4783,
                                                 "imgUrl": "https://cdn.modi.app/exhibitions/51/detail.jpg",
@@ -1920,7 +2195,8 @@
                                                 "place": "\uc608\uc220\uc758\uc804\ub2f9 \ud55c\uac00\ub78c\ubbf8\uc220\uad00",
                                                 "placeUrl": "https://www.sac.or.kr",
                                                 "posterUrl": "https://cdn.modi.app/exhibitions/51/poster.jpg",
-                                                "price": "\uc131\uc778 20,000\uc6d0 / \uccad\uc18c\ub144 15,000\uc6d0",
+                                                "price": "\ubb34\ub8cc",
+                                                "recorded": false,
                                                 "region": "SEOUL",
                                                 "serviceName": "\ubb38\ud654\ud3ec\ud138",
                                                 "sigungu": "\uc11c\ucd08\uad6c",
@@ -1988,6 +2264,226 @@
                 "summary": "\uc804\uc2dc \uc0c1\uc138",
                 "tags": [
                     "Exhibition"
+                ]
+            }
+        },
+        "/api/v1/exhibitions/{exhibitionId}/bookmark": {
+            "delete": {
+                "description": "\uc804\uc2dc \uad00\uc2ec\uc744 \ud574\uc81c\ud55c\ub2e4(\uba71\ub4f1 \u2014 \uc774\ubbf8 \ud574\uc81c \uc0c1\ud0dc\uc5ec\ub3c4 200). access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "remove",
+                "parameters": [
+                    {
+                        "description": "\uc804\uc2dc ID",
+                        "example": 51,
+                        "in": "path",
+                        "name": "exhibitionId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "bookmarked": false,
+                                        "exhibitionId": 51
+                                    },
+                                    "meta": {
+                                        "errorCode": null,
+                                        "message": null,
+                                        "result": "SUCCESS"
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/ToggleResponse"
+                                }
+                            }
+                        },
+                        "description": "\ud574\uc81c \uc131\uacf5(\uba71\ub4f1)"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {}
+                        },
+                        "description": "UNAUTHORIZED \u2014 \ubbf8\uc778\uc99d"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {}
+                        },
+                        "description": "NOT_FOUND \u2014 \uc5c6\ub294 \uc804\uc2dc"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uad00\uc2ec \uc804\uc2dc \ud574\uc81c",
+                "tags": [
+                    "Bookmark"
+                ]
+            },
+            "post": {
+                "description": "\uc804\uc2dc\ub97c \uad00\uc2ec \ub4f1\ub85d\ud55c\ub2e4(\uba71\ub4f1 \u2014 \uc774\ubbf8 \ub4f1\ub85d\ub3fc \uc788\uc5b4\ub3c4 200). access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "description": "\uc804\uc2dc ID",
+                        "example": 51,
+                        "in": "path",
+                        "name": "exhibitionId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "bookmarked": true,
+                                        "exhibitionId": 51
+                                    },
+                                    "meta": {
+                                        "errorCode": null,
+                                        "message": null,
+                                        "result": "SUCCESS"
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/ToggleResponse"
+                                }
+                            }
+                        },
+                        "description": "\ub4f1\ub85d \uc131\uacf5(\uba71\ub4f1)"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {}
+                        },
+                        "description": "UNAUTHORIZED \u2014 \ubbf8\uc778\uc99d"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": null,
+                                    "meta": {
+                                        "errorCode": "NOT_FOUND",
+                                        "message": "\uc694\uccad\ud55c \uc804\uc2dc\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+                                        "result": "FAIL"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "NOT_FOUND \u2014 \uc5c6\ub294 \uc804\uc2dc"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uad00\uc2ec \uc804\uc2dc \ub4f1\ub85d",
+                "tags": [
+                    "Bookmark"
+                ]
+            }
+        },
+        "/api/v1/notifications": {
+            "get": {
+                "description": "\ub0b4 \uc54c\ub9bc\uc744 \ucd5c\uc2e0\uc21c\uc73c\ub85c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "getNotifications",
+                "parameters": [
+                    {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c(\uccab \ud398\uc774\uc9c0\ub294 \uc0dd\ub7b5)",
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\ud398\uc774\uc9c0 \ud06c\uae30(\uae30\ubcf8 20, \ucd5c\ub300 50)",
+                        "in": "query",
+                        "name": "size",
+                        "required": false,
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseCursorResponseNotificationItem"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc54c\ub9bc \ubaa9\ub85d \uc870\ud68c",
+                "tags": [
+                    "Notification"
+                ]
+            }
+        },
+        "/api/v1/notifications/{notificationId}/read": {
+            "put": {
+                "description": "\uc54c\ub9bc\uc744 \uc77d\uc74c\uc73c\ub85c \ud45c\uc2dc\ud55c\ub2e4(\uba71\ub4f1). \uc5c6\uac70\ub098 \ud0c0\uc778 \uc54c\ub9bc\uc774\uba74 404. access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "markRead",
+                "parameters": [
+                    {
+                        "description": "\uc54c\ub9bc id",
+                        "in": "path",
+                        "name": "notificationId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseReadResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc54c\ub9bc \uc77d\uc74c \ucc98\ub9ac",
+                "tags": [
+                    "Notification"
                 ]
             }
         },
@@ -2712,6 +3208,31 @@
             }
         },
         "/api/v1/users/me": {
+            "delete": {
+                "description": "soft-delete \ud6c4 \ud1a0\ud070 \ubb34\ud6a8\ud654. \uc774\ud6c4 \ud504\ub85c\ud544 \uc870\ud68c\ub294 404. access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "withdraw",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseObject"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\ud68c\uc6d0 \ud0c8\ud1f4",
+                "tags": [
+                    "User"
+                ]
+            },
             "get": {
                 "description": "\ud504\ub85c\ud544 + \ucde8\ud5a5 \ud0a4\uc6cc\ub4dc + \ud65c\ub3d9 \ud1b5\uacc4. access \ud1a0\ud070 \ud544\uc694.",
                 "operationId": "me",
@@ -2733,6 +3254,172 @@
                     }
                 ],
                 "summary": "\ub0b4 \ud504\ub85c\ud544 \uc870\ud68c",
+                "tags": [
+                    "User"
+                ]
+            }
+        },
+        "/api/v1/users/me/bookmarks": {
+            "get": {
+                "description": "\ud504\ub85c\ud544 > \uad00\uc2ec \uc804\uc2dc. \uc804\uc2dc \ubaa9\ub85d\uacfc \ub3d9\uc77c\ud55c \ud56d\ubaa9 \uc2a4\ud0a4\ub9c8(bookmarked \ud56d\uc0c1 true)\ub97c \ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158\uc73c\ub85c \ubc18\ud658\ud55c\ub2e4.\nsort=latest(\ub4f1\ub85d \ucd5c\uc2e0\uc21c, \uae30\ubcf8) | ending(\uc885\ub8cc \uc784\ubc15\uc21c). access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "list_1",
+                "parameters": [
+                    {
+                        "description": "\uc815\ub82c. latest=\ub4f1\ub85d \ucd5c\uc2e0\uc21c(\uae30\ubcf8), ending=\uc885\ub8cc \uc784\ubc15\uc21c",
+                        "example": "latest",
+                        "in": "query",
+                        "name": "sort",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "latest",
+                                "ending"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c(\uccab \ud398\uc774\uc9c0\ub294 \uc0dd\ub7b5)",
+                        "in": "query",
+                        "name": "cursor",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "\ud398\uc774\uc9c0 \ud06c\uae30(\uae30\ubcf8 20, \ucd5c\ub300 50)",
+                        "example": 20,
+                        "in": "query",
+                        "name": "size",
+                        "required": false,
+                        "schema": {
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "content": [
+                                            {
+                                                "artistSummary": null,
+                                                "bookmarked": true,
+                                                "category": "PAINTING",
+                                                "dDay": 5,
+                                                "endDate": "2026-08-15",
+                                                "exhibitionId": 51,
+                                                "free": true,
+                                                "place": "\ub3d9\uc791\uc544\ud2b8\uac24\ub7ec\ub9ac",
+                                                "posterUrl": null,
+                                                "region": "SEOUL",
+                                                "startDate": "2026-07-01",
+                                                "title": "\ud76c\ubc15\ud55c \uacf5\uae30",
+                                                "type": "CATALOG"
+                                            }
+                                        ],
+                                        "hasNext": false,
+                                        "nextCursor": null,
+                                        "totalCount": 10
+                                    },
+                                    "meta": {
+                                        "errorCode": null,
+                                        "message": null,
+                                        "result": "SUCCESS"
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/CursorResponse"
+                                }
+                            }
+                        },
+                        "description": "\uc870\ud68c \uc131\uacf5"
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {}
+                        },
+                        "description": "INVALID_CURSOR \u2014 \uc815\ub82c \ubcc0\uacbd \ud6c4 \uc774\uc804 \ucee4\uc11c \uc7ac\uc0ac\uc6a9 \ub4f1 \ucee4\uc11c-\uc870\uac74 \ubd88\uc77c\uce58"
+                    },
+                    "401": {
+                        "content": {
+                            "application/json": {}
+                        },
+                        "description": "UNAUTHORIZED \u2014 \ubbf8\uc778\uc99d"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uad00\uc2ec \uc804\uc2dc \ubaa9\ub85d",
+                "tags": [
+                    "Bookmark"
+                ]
+            }
+        },
+        "/api/v1/users/me/notification-settings": {
+            "get": {
+                "description": "\ub9ac\ub9c8\uc778\ub4dc\u00b7\uacf5\uc9c0 \uc218\uc2e0 \uc5ec\ubd80. access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "notificationSettings",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseNotificationSettingsResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc54c\ub9bc \uc124\uc815 \uc870\ud68c",
+                "tags": [
+                    "User"
+                ]
+            },
+            "put": {
+                "description": "\ub9ac\ub9c8\uc778\ub4dc\u00b7\uacf5\uc9c0 \uc218\uc2e0 \uc5ec\ubd80 \uc804\uccb4 \uac31\uc2e0. \ub450 \ud544\ub4dc \ubaa8\ub450 \ud544\uc218. access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "updateNotificationSettings",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NotificationSettingsRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseNotificationSettingsResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc54c\ub9bc \uc124\uc815 \uc218\uc815",
                 "tags": [
                     "User"
                 ]
@@ -2774,6 +3461,45 @@
                     "User"
                 ]
             }
+        },
+        "/api/v1/venues": {
+            "get": {
+                "description": "\uc804\uc2dc\uad00\uba85 \ubd80\ubd84 \uc77c\uce58(\ub300\uc18c\ubb38\uc790 \ubb34\uc2dc) \uc790\ub3d9\uc644\uc131. \uc0c1\uc704 20\uac1c \uace0\uc815. keyword \uacf5\ubc31/\ubbf8\uc785\ub825\uc774\uba74 \ube48 \ubaa9\ub85d. access \ud1a0\ud070 \ud544\uc694.",
+                "operationId": "search_1",
+                "parameters": [
+                    {
+                        "description": "\uc804\uc2dc\uad00\uba85 \uac80\uc0c9\uc5b4(\ubd80\ubd84 \uc77c\uce58, \ub300\uc18c\ubb38\uc790 \ubb34\uc2dc)",
+                        "example": "\uc544",
+                        "in": "query",
+                        "name": "keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseSearchResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc804\uc2dc\uad00 \uac80\uc0c9(\uc790\ub3d9\uc644\uc131)",
+                "tags": [
+                    "Venue"
+                ]
+            }
         }
     },
     "servers": [
@@ -2784,24 +3510,36 @@
     ],
     "tags": [
         {
-            "description": "\ud504\ub85c\ud544 \uc870\ud68c \u00b7 \uc218\uc815",
-            "name": "User"
-        },
-        {
             "description": "\uc9c8\ubb38\uc73c\ub85c \uc791\uc131 \u2014 \uc804\uc2dc \ub9e5\ub77d \uc9c8\ubb38 \uc0dd\uc131 \u00b7 Q&A \uac10\uc0c1\ubb38 \ub2e4\ub4ec\uae30",
             "name": "Record AI"
+        },
+        {
+            "description": "\uc804\uc2dc\uad00 \uac80\uc0c9(\uc790\ub3d9\uc644\uc131)",
+            "name": "Venue"
         },
         {
             "description": "\ub9ac\ub9c8\uc778\ub4dc(\ud68c\uace0) \u2014 \uacfc\uac70 \uae30\ub85d \uc18c\ud658 \u00b7 \uac10\uc815 \ubcc0\ud654 \uc800\uc7a5/\uc870\ud68c",
             "name": "Remind"
         },
         {
+            "description": "\uc54c\ub9bc \ubaa9\ub85d \uc870\ud68c \u00b7 \uc77d\uc74c \ucc98\ub9ac",
+            "name": "Notification"
+        },
+        {
             "description": "\uc18c\uc15c \ub85c\uadf8\uc778 \u00b7 JWT \ubc1c\uae09/\uc7ac\ubc1c\uae09 \u00b7 \ub0b4 \uc815\ubcf4",
             "name": "Auth"
         },
         {
-            "description": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9 \u00b7 \uc0c1\uc138 \u00b7 \uac1c\uc778 \uc804\uc2dc \ub4f1\ub85d.\n\n## \uacf5\ud1b5 \uc751\ub2f5 \ud3ec\ub9f7(ApiResponse)\n\ubaa8\ub4e0 \uc751\ub2f5\uc740 \uc544\ub798 \ubd09\ud22c(envelope)\ub85c \uac10\uc2f8\uc9c4\ub2e4. \uc131\uacf5\uc740 \uc608\uc678 \uc5c6\uc774 HTTP 200\uc774\uba70(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158 \u2014 201 \ubbf8\uc0ac\uc6a9),\n\uc2e4\ud328\ub294 \uc5d0\ub7ec\uc758 HTTP \uc0c1\ud0dc \ucf54\ub4dc\uc640 \ud568\uaed8 meta.result=FAIL \u00b7 meta.errorCode \u00b7 meta.message\uac00 \ub0b4\ub824\uac04\ub2e4.\n```\n{\n  \"meta\": { \"result\": \"SUCCESS\" | \"FAIL\", \"errorCode\": string | null, \"message\": string | null },\n  \"data\": <T> | null\n}\n```\n\uac80\uc99d(Bean Validation) \uc2e4\ud328\ub294 \uc704 \ud3ec\ub9f7\uc758 data\uc5d0 \ud544\ub4dc\ubcc4 \uc624\ub958 \ubc30\uc5f4\uc774 \ucd94\uac00\ub85c \ub2f4\uae34\ub2e4:\n```\n\"data\": [ { \"field\": \"title\", \"value\": \"\", \"reason\": \"\uacf5\ubc31\uc77c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\" } ]\n```\n\n## \uacf5\ud1b5 \uc5d0\ub7ec \ucf54\ub4dc(ErrorType)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| INVALID_INPUT | 400 | \uc694\uccad \ud30c\ub77c\ubbf8\ud130/\ubc14\ub514\uac00 \uc62c\ubc14\ub974\uc9c0 \uc54a\uc74c(\ud615\uc2dd \uc624\ub958\u00b7\ubbf8\uc815\uc758 enum \ucf54\ub4dc \ub4f1) |\n| UNAUTHORIZED | 401 | \uc778\uc99d(Bearer access \ud1a0\ud070)\uc774 \ud544\uc694\ud558\uac70\ub098 \ubb34\ud6a8\ud568 |\n| FORBIDDEN | 403 | \uc778\uc99d\uc740 \ub410\uc73c\ub098 \ud574\ub2f9 \ub9ac\uc18c\uc2a4 \uc811\uadfc \uad8c\ud55c\uc774 \uc5c6\uc74c |\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \ub9ac\uc18c\uc2a4\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| METHOD_NOT_ALLOWED | 405 | \ud5c8\uc6a9\ub418\uc9c0 \uc54a\uc740 HTTP \uba54\uc11c\ub4dc |\n| INTERNAL_ERROR | 500 | \uc11c\ubc84 \ub0b4\ubd80 \uc624\ub958 |\n\n## \uc804\uc2dc \ub3c4\uba54\uc778 \uc5d0\ub7ec \ucf54\ub4dc(ExhibitionErrorCode)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \uc804\uc2dc\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| EXTERNAL_API_UNAVAILABLE | 503 | \uc678\ubd80 \uc804\uc2dc \uc815\ubcf4(\ubb38\ud654\ud3ec\ud138 \ub4f1)\ub97c \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc74c |\n",
+            "description": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9 \u00b7 \uc0c1\uc138 \u00b7 \uac1c\uc778 \uc804\uc2dc \ub4f1\ub85d.\n\n## \uacf5\ud1b5 \uc751\ub2f5 \ud3ec\ub9f7(ApiResponse)\n\ubaa8\ub4e0 \uc751\ub2f5\uc740 \uc544\ub798 \ubd09\ud22c(envelope)\ub85c \uac10\uc2f8\uc9c4\ub2e4. \uc131\uacf5\uc740 \uc608\uc678 \uc5c6\uc774 HTTP 200\uc774\uba70(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158 \u2014 201 \ubbf8\uc0ac\uc6a9),\n\uc2e4\ud328\ub294 \uc5d0\ub7ec\uc758 HTTP \uc0c1\ud0dc \ucf54\ub4dc\uc640 \ud568\uaed8 meta.result=FAIL \u00b7 meta.errorCode \u00b7 meta.message\uac00 \ub0b4\ub824\uac04\ub2e4.\n```\n{\n  \"meta\": { \"result\": \"SUCCESS\" | \"FAIL\", \"errorCode\": string | null, \"message\": string | null },\n  \"data\": <T> | null\n}\n```\n\uac80\uc99d(Bean Validation) \uc2e4\ud328\ub294 \uc704 \ud3ec\ub9f7\uc758 data\uc5d0 \ud544\ub4dc\ubcc4 \uc624\ub958 \ubc30\uc5f4\uc774 \ucd94\uac00\ub85c \ub2f4\uae34\ub2e4:\n```\n\"data\": [ { \"field\": \"title\", \"value\": \"\", \"reason\": \"\uacf5\ubc31\uc77c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\" } ]\n```\n\n## \uacf5\ud1b5 \uc5d0\ub7ec \ucf54\ub4dc(ErrorType)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| INVALID_INPUT | 400 | \uc694\uccad \ud30c\ub77c\ubbf8\ud130/\ubc14\ub514\uac00 \uc62c\ubc14\ub974\uc9c0 \uc54a\uc74c(\ud615\uc2dd \uc624\ub958\u00b7\ubbf8\uc815\uc758 enum \ucf54\ub4dc \ub4f1) |\n| INVALID_CURSOR | 400 | \ucee4\uc11c-\uc870\uac74 \ubd88\uc77c\uce58\u00b7\uc190\uc0c1\ub41c \ucee4\uc11c |\n| UNAUTHORIZED | 401 | \uc778\uc99d(Bearer access \ud1a0\ud070)\uc774 \ud544\uc694\ud558\uac70\ub098 \ubb34\ud6a8\ud568 |\n| FORBIDDEN | 403 | \uc778\uc99d\uc740 \ub410\uc73c\ub098 \ud574\ub2f9 \ub9ac\uc18c\uc2a4 \uc811\uadfc \uad8c\ud55c\uc774 \uc5c6\uc74c |\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \ub9ac\uc18c\uc2a4\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| METHOD_NOT_ALLOWED | 405 | \ud5c8\uc6a9\ub418\uc9c0 \uc54a\uc740 HTTP \uba54\uc11c\ub4dc |\n| INTERNAL_ERROR | 500 | \uc11c\ubc84 \ub0b4\ubd80 \uc624\ub958 |\n\n## \uc804\uc2dc \ub3c4\uba54\uc778 \uc5d0\ub7ec \ucf54\ub4dc(ExhibitionErrorCode)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \uc804\uc2dc\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| EXTERNAL_API_UNAVAILABLE | 503 | \uc678\ubd80 \uc804\uc2dc \uc815\ubcf4(\ubb38\ud654\ud3ec\ud138 \ub4f1)\ub97c \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc74c |\n",
             "name": "Exhibition"
+        },
+        {
+            "description": "\uad00\uc2ec \uc804\uc2dc(\ubd81\ub9c8\ud06c) \ub4f1\ub85d/\ud574\uc81c/\ubaa9\ub85d. \ubaa8\ub450 \uc778\uc99d \ud544\uc218.",
+            "name": "Bookmark"
+        },
+        {
+            "description": "\ud504\ub85c\ud544 \uc870\ud68c \u00b7 \uc218\uc815 \u00b7 \uc54c\ub9bc \uc124\uc815 \u00b7 \ud0c8\ud1f4",
+            "name": "User"
         }
     ]
 }

@@ -23,3 +23,15 @@ export const addPersonalExhibition = async (params) => {
   const data = await axiosInstance.post("/exhibitions/custom/", params);
   return data;
 };
+
+// 관심 전시 등록
+export const addExhibitionBookmark = async (exhibitionId) => {
+  const data = await axiosInstance.post(`/exhibitions/${exhibitionId}/bookmark`);
+  return data;
+};
+
+// 관심 전시 해제
+export const deleteExhibitionBookmark = async (exhibitionId) => {
+  const data = await axiosInstance.delete(`/exhibitions/${exhibitionId}/bookmark`);
+  return data;
+};
