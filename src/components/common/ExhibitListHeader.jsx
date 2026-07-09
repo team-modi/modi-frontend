@@ -1,5 +1,5 @@
+// components
 import SortDropdown from "@components/layout/SortDropdown";
-import "@styles/common/ExhibitListHeader.css";
 
 export default function ExhibitListHeader({ total, sort, onSortChange, onFilterClick }) {
   return (

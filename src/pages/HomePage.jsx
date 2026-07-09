@@ -78,7 +78,7 @@ const HomePage = () => {
           </div>
           <div className="home-box-vertical">
             <SubHeader title="이번 달 새로 열리는 전시" type="new" />
-            <div className="home-section-row">
+            <div className="home-section-row-scroll">
               {openingThisData.map((exhibit) => (
                 <ExhibitCard
                   key={exhibit.exhibitionId}

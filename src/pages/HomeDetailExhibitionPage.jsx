@@ -21,7 +21,7 @@ const HomeDetailExhibitionPage = () => {
         section: "free",
         title: "무료로 볼 수 있는 전시",
       });
-    } else {
+    } else if (type === "new") {
       setData({
         section: "opening-this-month",
         title: "이번 달 새로 열리는 전시",
@@ -35,7 +35,7 @@ const HomeDetailExhibitionPage = () => {
     })();
   }, []);
 
-  return <ExhibitionList title={data.title} section={data.section} />;
+  return <ExhibitionList title={data.title} section={data.section} type={type === "new" ? "row" : ""} />;
 };
 
 export default HomeDetailExhibitionPage;

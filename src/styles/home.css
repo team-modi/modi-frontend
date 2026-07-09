@@ -18,6 +18,13 @@
 }
 
 .home-section-row {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.home-section-row-scroll {
   display: flex;
   gap: 24px;
 
@@ -27,7 +34,7 @@
   -ms-overflow-style: none; /* IE, Edge */
 }
 
-.home-section-row::-webkit-scrollbar {
+.home-section-row-scroll::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
 
