@@ -2,89 +2,40 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 // components
-import Header from "@components/common/Header";
-import ExhibitCard from "@components/exhibition/ExhibitCard";
-import ExhibitListHeader from "@components/common/ExhibitListHeader";
-
-// api
-import { getExhibitionList } from "@api/exhibition";
+import ExhibitionList from "@components/layout/ExhibitionList";
 
 const HomeDetailExhibitionPage = () => {
-  const [exhibitionData, setExhibitionData] = useState([]);
-  const [sort, setSort] = useState("latest");
+  const [data, setData] = useState({});
 
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
 
-  const exhibitionList = async () => {
-    let response;
-    try {
-      if (type === "soon") {
-        response = await getExhibitionList({
-          section: "ending-soon",
-          sort,
-        });
-      } else if (type === "free") {
-        response = await getExhibitionList({
-          section: "free",
-          sort,
-        });
-      } else {
-        response = await getExhibitionList({
-          section: "opening-this-month",
-          sort,
-        });
-      }
-
-      setExhibitionData(response.data.data.content);
-    } catch (error) {
-      console.log(error);
+  const handleTypeData = () => {
+    if (type === "soon") {
+      setData({
+        section: "ending-soon",
+        title: "곧 끝나기 전에 봐야할 전시",
+      });
+    } else if (type === "free") {
+      setData({
+        section: "free",
+        title: "무료로 볼 수 있는 전시",
+      });
+    } else {
+      setData({
+        section: "opening-this-month",
+        title: "이번 달 새로 열리는 전시",
+      });
     }
   };
 
   useEffect(() => {
     (async () => {
-      await exhibitionList();
+      await handleTypeData();
     })();
-  }, [type, sort]);
+  }, []);
 
-  return (
-    <div className="app-shell">
-      <Header
-        type="sub"
-        title={
-          type === "soon"
-            ? "곧 끝나기 전에 봐야할 전시"
-            : type === "new"
-              ? "이번 달 새로 열리는 전시"
-              : "무료로 볼 수 있는 전시"
-        }
-      />
-      <div className="app-content">
-        <ExhibitListHeader
-          total={exhibitionData.length}
-          sort={sort}
-          onSortChange={setSort}
-          onFilterClick={() => {
-            // 필터 모달/바텀시트 열기
-          }}
-        />
-
-        <div className="home-section-vertical">
-          {exhibitionData.map((exhibit) => (
-            <ExhibitCard
-              key={exhibit.exhibitionId}
-              thumbnail={exhibit.posterUrl}
-              title={exhibit.title}
-              place={exhibit.place}
-              startDate={exhibit.startDate}
-              endDate={exhibit.endDate}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <ExhibitionList title={data.title} section={data.section} />;
 };
 
 export default HomeDetailExhibitionPage;

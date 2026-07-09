@@ -1,46 +1,24 @@
 import { useEffect, useState } from "react";
 
 // components
-import SubHeader from "@components/exhibition/SubHeader";
+import Header from "@components/common/Header";
 import ExhibitCard from "@components/exhibition/ExhibitCard";
-import BannerCarousel from "@components/home/BannerCarousel";
+import ExhibitListHeader from "@components/common/ExhibitListHeader";
 
 // api
-import { getExhibitionList, getExhibitionBanners } from "@api/exhibition";
+import { getExhibitionList } from "@api/exhibition";
 
-const ExhibitionList = () => {
-  const [endingSoonData, setEndingSoonData] = useState([]);
-  const [freeData, setFreeData] = useState([]);
-  const [openingThisData, setOpeningThisData] = useState([]);
-  const [bannerData, setBannerData] = useState([]);
+const ExhibitionList = ({ title, section }) => {
+  const [exhibitionData, setExhibitionData] = useState([]);
+  const [sort, setSort] = useState("latest");
 
   const exhibitionList = async () => {
     try {
-      const endingSoon = await getExhibitionList({
-        section: "ending-soon",
-        size: 2,
+      const response = await getExhibitionList({
+        section: { section },
+        sort,
       });
-      const free = await getExhibitionList({
-        section: "free",
-        size: 2,
-      });
-      const openingThis = await getExhibitionList({
-        section: "opening-this-month",
-        size: 5,
-      });
-
-      setEndingSoonData(endingSoon.data.data.content);
-      setFreeData(free.data.data.content);
-      setOpeningThisData(openingThis.data.data.content);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const exhibitionBanners = async () => {
-    try {
-      const response = await getExhibitionBanners();
-      setBannerData(response.data.data.banners);
+      setExhibitionData(response.data.data.content);
     } catch (error) {
       console.log(error);
     }
@@ -49,59 +27,33 @@ const ExhibitionList = () => {
   useEffect(() => {
     (async () => {
       await exhibitionList();
-      await exhibitionBanners();
     })();
-  }, []);
+  }, [sort]);
 
   return (
     <div className="app-shell">
+      <Header type="sub" title={title} />
       <div className="app-content">
-        <BannerCarousel banners={bannerData} />
-        <div className="home-body">
-          <div className="home-box-vertical">
-            <SubHeader title="곧 끝나기 전에 봐야할 전시" type="soon" />
-            <div className="home-section-vertical">
-              {endingSoonData.map((exhibit) => (
-                <ExhibitCard
-                  key={exhibit.exhibitionId}
-                  thumbnail={exhibit.posterUrl}
-                  title={exhibit.title}
-                  place={exhibit.place}
-                  startDate={exhibit.startDate}
-                  endDate={exhibit.endDate}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="home-box-vertical">
-            <SubHeader title="이번 달 새로 열리는 전시" type="new" />
-            <div className="home-section-row">
-              {openingThisData.map((exhibit) => (
-                <ExhibitCard
-                  key={exhibit.exhibitionId}
-                  type="vertical"
-                  thumbnail={exhibit.posterUrl}
-                  title={exhibit.title}
-                  place={exhibit.place}
-                  startDate={exhibit.startDate}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="home-box-vertical">
-            <SubHeader title="무료로 볼 수 있는 전시" type="free" />
-            <div className="home-section-vertical">
-              {freeData.map((exhibit) => (
-                <ExhibitCard
-                  key={exhibit.exhibitionId}
-                  thumbnail={exhibit.posterUrl}
-                  title={exhibit.title}
-                  place={exhibit.place}
-                  startDate={exhibit.startDate}
-                />
-              ))}
-            </div>
-          </div>
+        <ExhibitListHeader
+          total={exhibitionData.length}
+          sort={sort}
+          onSortChange={setSort}
+          onFilterClick={() => {
+            // 필터 모달/바텀시트 열기
+          }}
+        />
+
+        <div className="home-section-vertical">
+          {exhibitionData.map((exhibit) => (
+            <ExhibitCard
+              key={exhibit.exhibitionId}
+              thumbnail={exhibit.posterUrl}
+              title={exhibit.title}
+              place={exhibit.place}
+              startDate={exhibit.startDate}
+              endDate={exhibit.endDate}
+            />
+          ))}
         </div>
       </div>
     </div>
