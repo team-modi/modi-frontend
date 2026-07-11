@@ -16,6 +16,12 @@ export const guestLogin = async () => {
   return data;
 };
 
+// 휴대폰 식별 게스트 로그인 (같은 번호로 재로그인 시 같은 계정)
+export const guestPhoneLogin = async (phoneNumber) => {
+  const data = await axiosInstance.post("/auth/guest/phone", { phoneNumber });
+  return data;
+};
+
 // 로그아웃
 export const logout = async () => {
   const data = await axiosInstance.post("/auth/logout");
