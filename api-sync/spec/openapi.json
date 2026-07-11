@@ -292,6 +292,9 @@
                     "region": {
                         "type": "string"
                     },
+                    "sceneImageUrl": {
+                        "type": "string"
+                    },
                     "viewedAt": {
                         "format": "date",
                         "type": "string"
@@ -452,6 +455,28 @@
                             "ART_FAIR"
                         ],
                         "example": "SOLO",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "genreKeyword": {
+                        "description": "\uc7a5\ub974 \ud0a4\uc6cc\ub4dc(\ub9c8\uc2a4\ud130 10\uc885 \uc911 1\uac1c, \uc640\uc774\uc5b4\ud504\ub808\uc784 \uc7a5\ub974 \uc2dc\ud2b8). \uc120\ud0dd \u2014 \ubbf8\uc9c0\uc815 \uc2dc \ubd84\ub958\uae30(AI/\ub79c\ub364)\uac00 \uc790\ub3d9 \ubd80\uc5ec. \ub9c8\uc2a4\ud130 \ubc16 \uac12\uc740 400 INVALID_INPUT.",
+                        "enum": [
+                            "\ud68c\ud654\u00b7\ub4dc\ub85c\uc789",
+                            "\uc0ac\uc9c4",
+                            "\ubbf8\ub514\uc5b4\uc544\ud2b8",
+                            "\uc870\uac01\u00b7\uc124\uce58",
+                            "\ub514\uc790\uc778",
+                            "\uacf5\uc608",
+                            "\uac74\ucd95",
+                            "\uacf5\uc5f0",
+                            "\ud604\ub300\ubbf8\uc220",
+                            "\uc77c\ub7ec\uc2a4\ud2b8\ub808\uc774\uc158"
+                        ],
+                        "example": "\uc0ac\uc9c4",
+                        "maxLength": 50,
+                        "minLength": 0,
                         "type": [
                             "string",
                             "null"
@@ -798,11 +823,19 @@
                         ],
                         "type": "string"
                     },
+                    "beforeEmotionCodes": {
+                        "description": "\uc6d0\ubcf8 \uae30\ub85d\uc758 \uac10\uc815 \ucf54\ub4dc(\uadf8\ub54c). \uc6d0\ubcf8 \uc0ad\uc81c \uc2dc \ube48 \ub9ac\uc2a4\ud2b8",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
                     "createdAt": {
                         "format": "date-time",
                         "type": "string"
                     },
                     "emotionCodes": {
+                        "description": "\ud68c\uace0\uc758 \uac10\uc815 \ucf54\ub4dc(\uc9c0\uae08)",
                         "items": {
                             "type": "string"
                         },
@@ -922,6 +955,13 @@
                         "format": "date-time",
                         "type": "string"
                     },
+                    "imageUrl": {
+                        "description": "\uce74\ub4dc \uc378\ub124\uc77c \uc774\ubbf8\uc9c0 URL(\uc804\uc2dc \ud3ec\uc2a4\ud130). \uc5c6\uc73c\uba74 null",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "notificationId": {
                         "format": "int64",
                         "type": "integer"
@@ -930,7 +970,7 @@
                         "type": "boolean"
                     },
                     "targetId": {
-                        "description": "\uc774\ub3d9 \ub300\uc0c1 id. REMIND=remindId, NOTICE=null",
+                        "description": "\uc774\ub3d9 \ub300\uc0c1 id. REMIND=recordId, EXHIBITION=exhibitionId, NOTICE=null",
                         "format": "int64",
                         "type": [
                             "integer",
@@ -944,6 +984,7 @@
                         "description": "\uc54c\ub9bc \uc885\ub958",
                         "enum": [
                             "REMIND",
+                            "EXHIBITION",
                             "NOTICE"
                         ],
                         "type": "string"
@@ -1035,6 +1076,18 @@
                         "type": "integer"
                     }
                 },
+                "type": "object"
+            },
+            "PhoneGuestLoginRequest": {
+                "properties": {
+                    "phoneNumber": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "phoneNumber"
+                ],
                 "type": "object"
             },
             "ProfileRequest": {
@@ -1691,6 +1744,38 @@
                     }
                 },
                 "summary": "\uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778",
+                "tags": [
+                    "Auth"
+                ]
+            }
+        },
+        "/api/v1/auth/guest/phone": {
+            "post": {
+                "description": "\ubca0\ud0c0 \uae30\uac04 \uce74\uce74\uc624 \ub85c\uadf8\uc778 \ub300\uccb4\uc6a9. \ud734\ub300\ud3f0 \ubc88\ud638\ub85c \uc0ac\uc6a9\uc790\ub97c \uc2dd\ubcc4\ud574 **\uc7ac\ub85c\uadf8\uc778 \uc2dc \uac19\uc740 \uacc4\uc815**\uc744 \uc774\uc5b4 \uc4f4\ub2e4.\n- Body: `phoneNumber` \u2014 \ud558\uc774\ud508\u00b7\uacf5\ubc31 \ud3ec\ud568 \uc785\ub825 \ud5c8\uc6a9(\uc11c\ubc84\uac00 \uc22b\uc790\ub9cc\uc73c\ub85c \uc815\uaddc\ud654). 01\ub85c \uc2dc\uc791\ud558\ub294 10~11\uc790\ub9ac\uac00 \uc544\ub2c8\uba74 400 INVALID_INPUT.\n- \uac19\uc740 \ubc88\ud638 \ucd5c\ucd08 \ud638\ucd9c \uc2dc \uac8c\uc2a4\ud2b8 \uc0ac\uc6a9\uc790\ub97c \uc0dd\uc131\ud574 \ubc88\ud638\uc640 \uc5f0\uacb0\ud558\uace0, \uc774\ud6c4 \ud638\ucd9c\ubd80\ud130\ub294 \uadf8 \uc0ac\uc6a9\uc790\ub85c \ub85c\uadf8\uc778\ud55c\ub2e4(\uac00\uc785 \uacb8\uc6a9).\n- \uc751\ub2f5\u00b7\ud1a0\ud070 \uccb4\uacc4\ub294 \uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778\uacfc \ub3d9\uc77c(HttpOnly \ucfe0\ud0a4 + \ubcf8\ubb38 accessToken, `provider`=`guest`). \uc131\uacf5\uc740 \ud56d\uc0c1 200.",
+                "operationId": "guestPhoneLogin",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PhoneGuestLoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseTokenResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\ud734\ub300\ud3f0 \uc2dd\ubcc4 \uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778 (\ubca0\ud0c0 \uc804\uc6a9, \uac00\uc785 \uacb8\uc6a9)",
                 "tags": [
                     "Auth"
                 ]
@@ -2402,9 +2487,23 @@
         },
         "/api/v1/notifications": {
             "get": {
-                "description": "\ub0b4 \uc54c\ub9bc\uc744 \ucd5c\uc2e0\uc21c\uc73c\ub85c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). access \ud1a0\ud070 \ud544\uc694.",
+                "description": "\ub0b4 \uc54c\ub9bc\uc744 \ucd5c\uc2e0\uc21c\uc73c\ub85c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). \uc870\ud68c \uc2dc \uc870\uac74 \ucda9\uc871 \uc54c\ub9bc(\uc624\ub298\uc758 \uc5ec\uc6b4\u00b7\uc804\uc2dc \uc885\ub8cc \uc784\ubc15)\uc744 lazy \uc0dd\uc131\ud55c\ub2e4. access \ud1a0\ud070 \ud544\uc694.",
                 "operationId": "getNotifications",
                 "parameters": [
+                    {
+                        "description": "\uc54c\ub9bc \uc885\ub958 \ud544\ud130(REMIND=\uc624\ub298\uc758 \uc5ec\uc6b4, EXHIBITION=\uc804\uc2dc, NOTICE=\uacf5\uc9c0). \uc0dd\ub7b5=\uc804\uccb4",
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "REMIND",
+                                "EXHIBITION",
+                                "NOTICE"
+                            ],
+                            "type": "string"
+                        }
+                    },
                     {
                         "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c(\uccab \ud398\uc774\uc9c0\ub294 \uc0dd\ub7b5)",
                         "in": "query",
