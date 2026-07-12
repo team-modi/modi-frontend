@@ -1,6 +1,52 @@
 {
     "components": {
         "schemas": {
+            "ActivityItem": {
+                "properties": {
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "durationMs": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "method": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiPathCount": {
+                "properties": {
+                    "count": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "path": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseApiStats": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ApiStats"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
             "ApiResponseBookmarkResponse": {
                 "properties": {
                     "data": {
@@ -38,6 +84,17 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/CursorResponseNotificationItem"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseDashboard": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/Dashboard"
                     },
                     "meta": {
                         "$ref": "#/components/schemas/Metadata"
@@ -91,6 +148,17 @@
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/PageResponseRecordListItemResponse"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponsePageResponseUserListItem": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/PageResponseUserListItem"
                     },
                     "meta": {
                         "$ref": "#/components/schemas/Metadata"
@@ -182,6 +250,36 @@
                     },
                     "meta": {
                         "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseUserDetail": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/UserDetail"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiStats": {
+                "properties": {
+                    "endpoints": {
+                        "items": {
+                            "$ref": "#/components/schemas/Endpoint"
+                        },
+                        "type": "array"
+                    },
+                    "totalCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalErrors": {
+                        "format": "int64",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -290,6 +388,9 @@
                         "type": "integer"
                     },
                     "region": {
+                        "type": "string"
+                    },
+                    "sceneImageUrl": {
                         "type": "string"
                     },
                     "viewedAt": {
@@ -457,6 +558,28 @@
                             "null"
                         ]
                     },
+                    "genreKeyword": {
+                        "description": "\uc7a5\ub974 \ud0a4\uc6cc\ub4dc(\ub9c8\uc2a4\ud130 10\uc885 \uc911 1\uac1c, \uc640\uc774\uc5b4\ud504\ub808\uc784 \uc7a5\ub974 \uc2dc\ud2b8). \uc120\ud0dd \u2014 \ubbf8\uc9c0\uc815 \uc2dc \ubd84\ub958\uae30(AI/\ub79c\ub364)\uac00 \uc790\ub3d9 \ubd80\uc5ec. \ub9c8\uc2a4\ud130 \ubc16 \uac12\uc740 400 INVALID_INPUT.",
+                        "enum": [
+                            "\ud68c\ud654\u00b7\ub4dc\ub85c\uc789",
+                            "\uc0ac\uc9c4",
+                            "\ubbf8\ub514\uc5b4\uc544\ud2b8",
+                            "\uc870\uac01\u00b7\uc124\uce58",
+                            "\ub514\uc790\uc778",
+                            "\uacf5\uc608",
+                            "\uac74\ucd95",
+                            "\uacf5\uc5f0",
+                            "\ud604\ub300\ubbf8\uc220",
+                            "\uc77c\ub7ec\uc2a4\ud2b8\ub808\uc774\uc158"
+                        ],
+                        "example": "\uc0ac\uc9c4",
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "place": {
                         "description": "\uc804\uc2dc \uc7a5\uc18c\uba85(\uc9c1\uc811 \uc785\ub825). \uc120\ud0dd. venueId\uac00 \uc788\uc73c\uba74 \ubb34\uc2dc\ub41c\ub2e4.",
                         "example": "\uc131\uc218 \uac24\ub7ec\ub9ac",
@@ -530,6 +653,77 @@
                 "required": [
                     "title"
                 ],
+                "type": "object"
+            },
+            "DailyCount": {
+                "properties": {
+                    "count": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "date": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Dashboard": {
+                "properties": {
+                    "catalogExhibitions": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "customExhibitions": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "recordsByDay": {
+                        "items": {
+                            "$ref": "#/components/schemas/DailyCount"
+                        },
+                        "type": "array"
+                    },
+                    "remindConversionRate": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "remindedRecords": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "signupsByDay": {
+                        "items": {
+                            "$ref": "#/components/schemas/DailyCount"
+                        },
+                        "type": "array"
+                    },
+                    "topEmotions": {
+                        "items": {
+                            "$ref": "#/components/schemas/EmotionCount"
+                        },
+                        "type": "array"
+                    },
+                    "totalApiCalls": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalExhibitions": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalRecords": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalReminds": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalUsers": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
                 "type": "object"
             },
             "DetailResponse": {
@@ -748,6 +942,60 @@
                 },
                 "type": "object"
             },
+            "EmotionCount": {
+                "properties": {
+                    "count": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "emotionCode": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Endpoint": {
+                "properties": {
+                    "avgMs": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "count": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "errorCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "maxMs": {
+                        "format": "double",
+                        "type": "number"
+                    },
+                    "method": {
+                        "type": "string"
+                    },
+                    "uri": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ExhibitionItem": {
+                "properties": {
+                    "exhibitionId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "ExhibitionRef": {
                 "properties": {
                     "exhibitionId": {
@@ -798,11 +1046,19 @@
                         ],
                         "type": "string"
                     },
+                    "beforeEmotionCodes": {
+                        "description": "\uc6d0\ubcf8 \uae30\ub85d\uc758 \uac10\uc815 \ucf54\ub4dc(\uadf8\ub54c). \uc6d0\ubcf8 \uc0ad\uc81c \uc2dc \ube48 \ub9ac\uc2a4\ud2b8",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
                     "createdAt": {
                         "format": "date-time",
                         "type": "string"
                     },
                     "emotionCodes": {
+                        "description": "\ud68c\uace0\uc758 \uac10\uc815 \ucf54\ub4dc(\uc9c0\uae08)",
                         "items": {
                             "type": "string"
                         },
@@ -922,6 +1178,13 @@
                         "format": "date-time",
                         "type": "string"
                     },
+                    "imageUrl": {
+                        "description": "\uce74\ub4dc \uc378\ub124\uc77c \uc774\ubbf8\uc9c0 URL(\uc804\uc2dc \ud3ec\uc2a4\ud130). \uc5c6\uc73c\uba74 null",
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "notificationId": {
                         "format": "int64",
                         "type": "integer"
@@ -930,7 +1193,7 @@
                         "type": "boolean"
                     },
                     "targetId": {
-                        "description": "\uc774\ub3d9 \ub300\uc0c1 id. REMIND=remindId, NOTICE=null",
+                        "description": "\uc774\ub3d9 \ub300\uc0c1 id. REMIND=recordId, EXHIBITION=exhibitionId, NOTICE=null",
                         "format": "int64",
                         "type": [
                             "integer",
@@ -944,6 +1207,7 @@
                         "description": "\uc54c\ub9bc \uc885\ub958",
                         "enum": [
                             "REMIND",
+                            "EXHIBITION",
                             "NOTICE"
                         ],
                         "type": "string"
@@ -1035,6 +1299,48 @@
                         "type": "integer"
                     }
                 },
+                "type": "object"
+            },
+            "PageResponseUserListItem": {
+                "properties": {
+                    "content": {
+                        "items": {
+                            "$ref": "#/components/schemas/UserListItem"
+                        },
+                        "type": "array"
+                    },
+                    "hasNext": {
+                        "type": "boolean"
+                    },
+                    "page": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "size": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "totalElements": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "format": "int32",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "PhoneGuestLoginRequest": {
+                "properties": {
+                    "phoneNumber": {
+                        "minLength": 1,
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "phoneNumber"
+                ],
                 "type": "object"
             },
             "ProfileRequest": {
@@ -1331,6 +1637,39 @@
                 },
                 "type": "object"
             },
+            "RecordItem": {
+                "properties": {
+                    "aiStatus": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "exhibitionId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "exhibitionTitle": {
+                        "type": "string"
+                    },
+                    "recordId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "representativeEmotion": {
+                        "type": "string"
+                    },
+                    "viewedAt": {
+                        "format": "date",
+                        "type": "string"
+                    },
+                    "writeMode": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "RecordListItemResponse": {
                 "properties": {
                     "aiSummary": {
@@ -1483,6 +1822,29 @@
                     "content",
                     "emotionCodes"
                 ],
+                "type": "object"
+            },
+            "RemindItem": {
+                "properties": {
+                    "aiStatus": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "recordId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "reflection": {
+                        "type": "string"
+                    },
+                    "remindId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
                 "type": "object"
             },
             "SaveRequest": {
@@ -1656,6 +2018,140 @@
                     }
                 },
                 "type": "object"
+            },
+            "UserDetail": {
+                "properties": {
+                    "ageGroup": {
+                        "type": "string"
+                    },
+                    "apiCallCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "apiCallsByPath": {
+                        "items": {
+                            "$ref": "#/components/schemas/ApiPathCount"
+                        },
+                        "type": "array"
+                    },
+                    "birthYear": {
+                        "format": "int32",
+                        "type": "integer"
+                    },
+                    "bookmarkCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "lastActivityAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "nickname": {
+                        "type": "string"
+                    },
+                    "phoneNumber": {
+                        "type": "string"
+                    },
+                    "recentActivity": {
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityItem"
+                        },
+                        "type": "array"
+                    },
+                    "recentBookmarks": {
+                        "items": {
+                            "$ref": "#/components/schemas/ExhibitionItem"
+                        },
+                        "type": "array"
+                    },
+                    "recentRecords": {
+                        "items": {
+                            "$ref": "#/components/schemas/RecordItem"
+                        },
+                        "type": "array"
+                    },
+                    "recentReminds": {
+                        "items": {
+                            "$ref": "#/components/schemas/RemindItem"
+                        },
+                        "type": "array"
+                    },
+                    "recordCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "remindCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "remindEnabled": {
+                        "type": "boolean"
+                    },
+                    "residenceRegion": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "visitedExhibitionCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "UserListItem": {
+                "properties": {
+                    "apiCallCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "bookmarkCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "lastActivityAt": {
+                        "format": "date-time",
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "nickname": {
+                        "type": "string"
+                    },
+                    "phoneNumber": {
+                        "type": "string"
+                    },
+                    "recordCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "remindCount": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "userId": {
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1674,6 +2170,261 @@
     },
     "openapi": "3.1.0",
     "paths": {
+        "/api-admin/v1/login": {
+            "post": {
+                "description": "\uc774\uba54\uc77c\uc774 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\uc5d0 \uc788\uace0 \ube44\ubc00\ubc88\ud638\uac00 \ub9de\uc73c\uba74 admin_session \ucfe0\ud0a4\ub97c \ubc1c\uae09\ud55c\ub2e4.",
+                "operationId": "login_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseObject"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\uad00\ub9ac\uc790 \ub85c\uadf8\uc778",
+                "tags": [
+                    "Admin - Auth"
+                ]
+            }
+        },
+        "/api-admin/v1/logout": {
+            "post": {
+                "description": "admin_session \ucfe0\ud0a4\ub97c \ub9cc\ub8cc\uc2dc\ud0a8\ub2e4.",
+                "operationId": "logout_1",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseObject"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\uad00\ub9ac\uc790 \ub85c\uadf8\uc544\uc6c3",
+                "tags": [
+                    "Admin - Auth"
+                ]
+            }
+        },
+        "/api-admin/v1/me": {
+            "get": {
+                "description": "\uc720\ud6a8\ud55c admin_session\uc774\uba74 200(\ub85c\uadf8\uc778 \uc0c1\ud0dc), \uc544\ub2c8\uba74 401.",
+                "operationId": "me_1",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseObject"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\uc138\uc158 \ud655\uc778",
+                "tags": [
+                    "Admin - Auth"
+                ]
+            }
+        },
+        "/api-admin/v1/metrics/api-stats": {
+            "get": {
+                "description": "\uc5d4\ub4dc\ud3ec\uc778\ud2b8\ubcc4 \ud638\ucd9c\uc218\u00b7\uc5d0\ub7ec\uc218\u00b7\ud3c9\uade0/\ucd5c\ub300 \uc9c0\uc5f0(Micrometer http.server.requests \uae30\ubc18).",
+                "operationId": "apiStats",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseApiStats"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "API\ubcc4 \ud1b5\uacc4",
+                "tags": [
+                    "Admin - Metrics"
+                ]
+            }
+        },
+        "/api-admin/v1/metrics/dashboard": {
+            "get": {
+                "description": "\uac00\uc785/\uae30\ub85d/\ub9ac\ub9c8\uc778\ub4dc/\uc804\uc2dc \ucd1d\uacc4, \ub9ac\ub9c8\uc778\ub4dc \uc804\ud658\uc728, \uc77c\uc790\ubcc4 \ucd94\uc774, \uc778\uae30 \uac10\uc815 Top10.",
+                "operationId": "dashboard",
+                "parameters": [
+                    {
+                        "description": "\ucd94\uc774 \uc870\ud68c \uae30\uac04(\uc77c)",
+                        "example": 30,
+                        "in": "query",
+                        "name": "days",
+                        "required": false,
+                        "schema": {
+                            "default": 30,
+                            "format": "int32",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseDashboard"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\ub300\uc2dc\ubcf4\ub4dc \uc9d1\uacc4",
+                "tags": [
+                    "Admin - Metrics"
+                ]
+            }
+        },
+        "/api-admin/v1/users": {
+            "get": {
+                "description": "\ub2c9\ub124\uc784/\uc2e4\uba85 \uac80\uc0c9 + \uc0ac\uc6a9\uc790\ubcc4 \uae30\ub85d\u00b7\ub9ac\ub9c8\uc778\ub4dc\u00b7\ubd81\ub9c8\ud06c\u00b7API\ud638\ucd9c \uc218, \ub9c8\uc9c0\ub9c9 \ud65c\ub3d9. \ucd5c\uc2e0 \uac00\uc785\uc21c.",
+                "operationId": "list_3",
+                "parameters": [
+                    {
+                        "description": "\ub2c9\ub124\uc784/\uc2e4\uba85 \ubd80\ubd84\uac80\uc0c9",
+                        "in": "query",
+                        "name": "q",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Zero-based page index (0..N)",
+                        "in": "query",
+                        "name": "page",
+                        "required": false,
+                        "schema": {
+                            "default": 0,
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "The size of the page to be returned",
+                        "in": "query",
+                        "name": "size",
+                        "required": false,
+                        "schema": {
+                            "default": 20,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "in": "query",
+                        "name": "sort",
+                        "required": false,
+                        "schema": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponsePageResponseUserListItem"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc0ac\uc6a9\uc790 \ubaa9\ub85d",
+                "tags": [
+                    "Admin - Users"
+                ]
+            }
+        },
+        "/api-admin/v1/users/{userId}": {
+            "get": {
+                "description": "\ud504\ub85c\ud544 + \ucd1d\uacc4 + \ucd5c\uadfc \uae30\ub85d/\ub9ac\ub9c8\uc778\ub4dc/\ubd81\ub9c8\ud06c/\uc804\uc2dc\ud65c\ub3d9 + API \ud638\ucd9c \ud65c\ub3d9 \uae30\ub85d.",
+                "operationId": "detail_1",
+                "parameters": [
+                    {
+                        "description": "\uc0ac\uc6a9\uc790 ID",
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseUserDetail"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc0ac\uc6a9\uc790 \uc0c1\uc138",
+                "tags": [
+                    "Admin - Users"
+                ]
+            }
+        },
         "/api/v1/auth/guest": {
             "post": {
                 "description": "\uc18c\uc15c \uc778\uc99d \uc5c6\uc774 \uc784\uc2dc \uc0ac\uc6a9\uc790\ub97c \uc989\uc2dc \uc0dd\uc131\ud558\uace0 \uc790\uccb4 JWT\ub97c \ubc1c\uae09\ud55c\ub2e4(\uac00\uc785 \uacb8\uc6a9).\n- \uc694\uccad body \uc5c6\uc74c. \ud638\ucd9c\ud560 \ub54c\ub9c8\ub2e4 \uc0c8 \uac8c\uc2a4\ud2b8 \uc0ac\uc6a9\uc790\uac00 \uc0dd\uc131\ub41c\ub2e4(\ub2c9\ub124\uc784 \"\uac8c\uc2a4\ud2b8\", \ud504\ub85c\ud544 \ubbf8\uc644).\n- \uc751\ub2f5: \uc18c\uc15c \ub85c\uadf8\uc778\uacfc \ub3d9\uc77c\ud558\uac8c `access`\u00b7`refresh` \ud1a0\ud070\uc744 **HttpOnly \ucfe0\ud0a4**\ub85c \ub0b4\ub824\uc8fc\uace0, `accessToken`\uc740 \ubcf8\ubb38\uc5d0\ub3c4 \ud568\uaed8 \ubc18\ud658\ud55c\ub2e4.\n- \uc774 \ud1a0\ud070\uc73c\ub85c \uae30\ub85d \ub4f1 **\ub85c\uadf8\uc778 \uc804\uc6a9 API\ub97c \uadf8\ub300\ub85c \ud638\ucd9c**\ud560 \uc218 \uc788\ub2e4. \uc774\ud6c4 \ud504\ub85c\ud544 \uc218\uc815(`PUT /api/v1/users/me/profile`)\uc73c\ub85c \uc815\ubcf4\ub97c \ucc44\uc6b8 \uc218 \uc788\ub2e4.\n- `provider`\ub294 `guest`\ub85c \ub0b4\ub824\uac04\ub2e4. \uc131\uacf5\uc740 \ud56d\uc0c1 200(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158).",
@@ -1691,6 +2442,38 @@
                     }
                 },
                 "summary": "\uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778",
+                "tags": [
+                    "Auth"
+                ]
+            }
+        },
+        "/api/v1/auth/guest/phone": {
+            "post": {
+                "description": "\ubca0\ud0c0 \uae30\uac04 \uce74\uce74\uc624 \ub85c\uadf8\uc778 \ub300\uccb4\uc6a9. \ud734\ub300\ud3f0 \ubc88\ud638\ub85c \uc0ac\uc6a9\uc790\ub97c \uc2dd\ubcc4\ud574 **\uc7ac\ub85c\uadf8\uc778 \uc2dc \uac19\uc740 \uacc4\uc815**\uc744 \uc774\uc5b4 \uc4f4\ub2e4.\n- Body: `phoneNumber` \u2014 \ud558\uc774\ud508\u00b7\uacf5\ubc31 \ud3ec\ud568 \uc785\ub825 \ud5c8\uc6a9(\uc11c\ubc84\uac00 \uc22b\uc790\ub9cc\uc73c\ub85c \uc815\uaddc\ud654). 01\ub85c \uc2dc\uc791\ud558\ub294 10~11\uc790\ub9ac\uac00 \uc544\ub2c8\uba74 400 INVALID_INPUT.\n- \uac19\uc740 \ubc88\ud638 \ucd5c\ucd08 \ud638\ucd9c \uc2dc \uac8c\uc2a4\ud2b8 \uc0ac\uc6a9\uc790\ub97c \uc0dd\uc131\ud574 \ubc88\ud638\uc640 \uc5f0\uacb0\ud558\uace0, \uc774\ud6c4 \ud638\ucd9c\ubd80\ud130\ub294 \uadf8 \uc0ac\uc6a9\uc790\ub85c \ub85c\uadf8\uc778\ud55c\ub2e4(\uac00\uc785 \uacb8\uc6a9).\n- \uc751\ub2f5\u00b7\ud1a0\ud070 \uccb4\uacc4\ub294 \uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778\uacfc \ub3d9\uc77c(HttpOnly \ucfe0\ud0a4 + \ubcf8\ubb38 accessToken, `provider`=`guest`). \uc131\uacf5\uc740 \ud56d\uc0c1 200.",
+                "operationId": "guestPhoneLogin",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PhoneGuestLoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseTokenResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "summary": "\ud734\ub300\ud3f0 \uc2dd\ubcc4 \uac8c\uc2a4\ud2b8 \ub85c\uadf8\uc778 (\ubca0\ud0c0 \uc804\uc6a9, \uac00\uc785 \uacb8\uc6a9)",
                 "tags": [
                     "Auth"
                 ]
@@ -2402,9 +3185,23 @@
         },
         "/api/v1/notifications": {
             "get": {
-                "description": "\ub0b4 \uc54c\ub9bc\uc744 \ucd5c\uc2e0\uc21c\uc73c\ub85c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). access \ud1a0\ud070 \ud544\uc694.",
+                "description": "\ub0b4 \uc54c\ub9bc\uc744 \ucd5c\uc2e0\uc21c\uc73c\ub85c \uc870\ud68c\ud55c\ub2e4(\ucee4\uc11c \ud398\uc774\uc9c0\ub124\uc774\uc158). \uc870\ud68c \uc2dc \uc870\uac74 \ucda9\uc871 \uc54c\ub9bc(\uc624\ub298\uc758 \uc5ec\uc6b4\u00b7\uc804\uc2dc \uc885\ub8cc \uc784\ubc15)\uc744 lazy \uc0dd\uc131\ud55c\ub2e4. access \ud1a0\ud070 \ud544\uc694.",
                 "operationId": "getNotifications",
                 "parameters": [
+                    {
+                        "description": "\uc54c\ub9bc \uc885\ub958 \ud544\ud130(REMIND=\uc624\ub298\uc758 \uc5ec\uc6b4, EXHIBITION=\uc804\uc2dc, NOTICE=\uacf5\uc9c0). \uc0dd\ub7b5=\uc804\uccb4",
+                        "in": "query",
+                        "name": "type",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "REMIND",
+                                "EXHIBITION",
+                                "NOTICE"
+                            ],
+                            "type": "string"
+                        }
+                    },
                     {
                         "description": "\ub2e4\uc74c \ud398\uc774\uc9c0 \uc870\ud68c\uc6a9 opaque \ucee4\uc11c(\uccab \ud398\uc774\uc9c0\ub294 \uc0dd\ub7b5)",
                         "in": "query",
@@ -3510,6 +4307,10 @@
     ],
     "tags": [
         {
+            "description": "\uad00\ub9ac\uc790 \uc0ac\uc6a9\uc790 \uc870\ud68c(\ubaa9\ub85d/\uc0c1\uc138). \uad00\ub9ac\uc790 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\ub9cc \uc811\uadfc.",
+            "name": "Admin - Users"
+        },
+        {
             "description": "\uc9c8\ubb38\uc73c\ub85c \uc791\uc131 \u2014 \uc804\uc2dc \ub9e5\ub77d \uc9c8\ubb38 \uc0dd\uc131 \u00b7 Q&A \uac10\uc0c1\ubb38 \ub2e4\ub4ec\uae30",
             "name": "Record AI"
         },
@@ -3528,6 +4329,14 @@
         {
             "description": "\uc18c\uc15c \ub85c\uadf8\uc778 \u00b7 JWT \ubc1c\uae09/\uc7ac\ubc1c\uae09 \u00b7 \ub0b4 \uc815\ubcf4",
             "name": "Auth"
+        },
+        {
+            "description": "\uad00\ub9ac\uc790 \ub300\uc2dc\ubcf4\ub4dc/\uc9d1\uacc4 \uc9c0\ud45c. \uad00\ub9ac\uc790 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8(app.admin.user-ids)\ub9cc \uc811\uadfc.",
+            "name": "Admin - Metrics"
+        },
+        {
+            "description": "\uad00\ub9ac\uc790 \ucf58\uc194 \ub85c\uadf8\uc778(\uc774\uba54\uc77c \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8 + \uacf5\uc6a9 \ube44\ubc00\ubc88\ud638). \uc131\uacf5 \uc2dc admin_session \ucfe0\ud0a4 \ubc1c\uae09.",
+            "name": "Admin - Auth"
         },
         {
             "description": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9 \u00b7 \uc0c1\uc138 \u00b7 \uac1c\uc778 \uc804\uc2dc \ub4f1\ub85d.\n\n## \uacf5\ud1b5 \uc751\ub2f5 \ud3ec\ub9f7(ApiResponse)\n\ubaa8\ub4e0 \uc751\ub2f5\uc740 \uc544\ub798 \ubd09\ud22c(envelope)\ub85c \uac10\uc2f8\uc9c4\ub2e4. \uc131\uacf5\uc740 \uc608\uc678 \uc5c6\uc774 HTTP 200\uc774\uba70(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158 \u2014 201 \ubbf8\uc0ac\uc6a9),\n\uc2e4\ud328\ub294 \uc5d0\ub7ec\uc758 HTTP \uc0c1\ud0dc \ucf54\ub4dc\uc640 \ud568\uaed8 meta.result=FAIL \u00b7 meta.errorCode \u00b7 meta.message\uac00 \ub0b4\ub824\uac04\ub2e4.\n```\n{\n  \"meta\": { \"result\": \"SUCCESS\" | \"FAIL\", \"errorCode\": string | null, \"message\": string | null },\n  \"data\": <T> | null\n}\n```\n\uac80\uc99d(Bean Validation) \uc2e4\ud328\ub294 \uc704 \ud3ec\ub9f7\uc758 data\uc5d0 \ud544\ub4dc\ubcc4 \uc624\ub958 \ubc30\uc5f4\uc774 \ucd94\uac00\ub85c \ub2f4\uae34\ub2e4:\n```\n\"data\": [ { \"field\": \"title\", \"value\": \"\", \"reason\": \"\uacf5\ubc31\uc77c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\" } ]\n```\n\n## \uacf5\ud1b5 \uc5d0\ub7ec \ucf54\ub4dc(ErrorType)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| INVALID_INPUT | 400 | \uc694\uccad \ud30c\ub77c\ubbf8\ud130/\ubc14\ub514\uac00 \uc62c\ubc14\ub974\uc9c0 \uc54a\uc74c(\ud615\uc2dd \uc624\ub958\u00b7\ubbf8\uc815\uc758 enum \ucf54\ub4dc \ub4f1) |\n| INVALID_CURSOR | 400 | \ucee4\uc11c-\uc870\uac74 \ubd88\uc77c\uce58\u00b7\uc190\uc0c1\ub41c \ucee4\uc11c |\n| UNAUTHORIZED | 401 | \uc778\uc99d(Bearer access \ud1a0\ud070)\uc774 \ud544\uc694\ud558\uac70\ub098 \ubb34\ud6a8\ud568 |\n| FORBIDDEN | 403 | \uc778\uc99d\uc740 \ub410\uc73c\ub098 \ud574\ub2f9 \ub9ac\uc18c\uc2a4 \uc811\uadfc \uad8c\ud55c\uc774 \uc5c6\uc74c |\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \ub9ac\uc18c\uc2a4\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| METHOD_NOT_ALLOWED | 405 | \ud5c8\uc6a9\ub418\uc9c0 \uc54a\uc740 HTTP \uba54\uc11c\ub4dc |\n| INTERNAL_ERROR | 500 | \uc11c\ubc84 \ub0b4\ubd80 \uc624\ub958 |\n\n## \uc804\uc2dc \ub3c4\uba54\uc778 \uc5d0\ub7ec \ucf54\ub4dc(ExhibitionErrorCode)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \uc804\uc2dc\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| EXTERNAL_API_UNAVAILABLE | 503 | \uc678\ubd80 \uc804\uc2dc \uc815\ubcf4(\ubb38\ud654\ud3ec\ud138 \ub4f1)\ub97c \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc74c |\n",

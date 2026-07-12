@@ -10,14 +10,31 @@ import DetailExhibitionPage from "@pages/DetailExhibitionPage";
 import RegisterExhibitionPage from "@pages/RegisterExhibitionPage";
 import RecordPage from "@pages/RecordPage";
 
+// router
+import RequireAuth from "@router/RootRedirect";
+
 export const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/yeowun" replace /> },
   { path: "/yeowun", element: <HomePage /> },
   { path: "/home_detail_exhibition", element: <HomeDetailExhibitionPage /> },
   { path: "/login", element: <LoginPage /> },
-  { path: "/profile", element: <ProfilePage /> },
+  {
+    path: "/profile",
+    element: (
+      <RequireAuth>
+        <ProfilePage />
+      </RequireAuth>
+    ),
+  },
   { path: "/exhibition", element: <ExhibitionPage /> },
   { path: "/exhibition/register", element: <RegisterExhibitionPage /> },
   { path: "/exhibition/:exhibitionId", element: <DetailExhibitionPage /> },
-  { path: "/record", element: <RecordPage /> },
+  {
+    path: "/record",
+    element: (
+      <RequireAuth>
+        <RecordPage />
+      </RequireAuth>
+    ),
+  },
 ]);
