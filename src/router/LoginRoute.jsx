@@ -7,6 +7,7 @@ import HomeDetailExhibitionPage from "@pages/HomeDetailExhibitionPage";
 import ProfilePage from "@pages/ProfilePage";
 import ExhibitionPage from "@pages/ExhibitionPage";
 import DetailExhibitionPage from "@pages/DetailExhibitionPage";
+import RegisterExhibitionPage from "@pages/RegisterExhibitionPage";
 import RecordPage from "@pages/RecordPage";
 
 // router
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
     ),
   },
   { path: "/exhibition", element: <ExhibitionPage /> },
+  { path: "/exhibition/register", element: <RegisterExhibitionPage /> },
   { path: "/exhibition/:exhibitionId", element: <DetailExhibitionPage /> },
   {
     path: "/record",
