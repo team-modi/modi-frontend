@@ -49,7 +49,7 @@ export default function FilterSheet({ isOpen, onClose, totalCount = 0, onApply }
     return () => {
       ignore = true;
     };
-  }, [isOpen, JSON.stringify(selectedRegions), JSON.stringify(selectedGenres)]);
+  }, [isOpen, selectedRegions, selectedGenres]);
 
   const handleReset = () => {
     setSelectedRegions(["all"]);

@@ -21,25 +21,27 @@ const ExhibitionList = ({ type, data }) => {
   const [region, setRegion] = useState(undefined);
   const [category, setCategory] = useState(undefined);
 
-  const exhibitionList = async () => {
-    try {
-      const response = await getExhibitionList({
-        sort,
-        size: 20,
-        region,
-        category,
-        ...data,
-      });
-      setExhibitionData(response.data.data.content);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    let ignore = false;
+
     (async () => {
-      await exhibitionList();
+      try {
+        const response = await getExhibitionList({
+          sort,
+          size: 20,
+          region,
+          category,
+          ...data,
+        });
+        if (!ignore) setExhibitionData(response.data.data.content);
+      } catch (error) {
+        console.log(error);
+      }
     })();
+
+    return () => {
+      ignore = true;
+    };
   }, [sort, region, category, JSON.stringify(data)]);
 
   const handleApplyFilter = ({ regions, genres }) => {
