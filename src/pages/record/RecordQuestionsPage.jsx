@@ -27,14 +27,12 @@ export default function RecordQuestionsPage() {
   const setContent = useRecordDraftStore((state) => state.setContent);
 
   const [step, setStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
 
   useEffect(() => {
     if (questions.length > 0) return;
 
     let ignore = false;
-    setIsLoading(true);
 
     (async () => {
       try {
@@ -42,8 +40,6 @@ export default function RecordQuestionsPage() {
         if (!ignore) setQuestions(response.data.data.questions ?? response.data.data ?? []);
       } catch (error) {
         console.log(error);
-      } finally {
-        if (!ignore) setIsLoading(false);
       }
     })();
 
@@ -83,7 +79,6 @@ export default function RecordQuestionsPage() {
 
     setIsComposing(true);
     try {
-      // TODO: composeRecord의 answers 파라미터 실제 형태(질문 텍스트 포함 여부 등)는 백엔드와 확인 필요
       const response = await composeRecord(
         exhibitionId,
         questions.map((question, index) => ({ question, answer: answers[index] })),
@@ -109,7 +104,7 @@ export default function RecordQuestionsPage() {
         <div className="app-content-pad record-questions">
           <StepDots total={TOTAL_STEPS} current={step} />
 
-          {isLoading || !currentQuestion ? (
+          {!currentQuestion ? (
             <p className="record-questions-loading text-body-1-regular">질문을 준비하고 있어요…</p>
           ) : (
             <>

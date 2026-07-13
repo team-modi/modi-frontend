@@ -29,7 +29,6 @@ export default function MediaAttachSheet({ isOpen, onClose, remaining, onAdd }) 
       const uploaded = [];
       for (const file of files) {
         // R2 프리사인 발급 Worker의 동시 요청 제한이 확인되지 않아 우선 순차 업로드로 안전하게 처리함.
-        // eslint-disable-next-line no-await-in-loop
         const result = await uploadMedia(file);
         uploaded.push(result);
       }
