@@ -11,6 +11,7 @@ import GenreSheet from "@components/record/GenreSheet";
 
 // api
 import { addPersonalExhibition } from "@api/exhibition";
+import { uploadMedia } from "@api/media";
 
 // store
 import { useRecordDraftStore } from "@store/useRecordDraftStore";
@@ -73,18 +74,30 @@ const RecordPage = ({ pageTitle = "전시 추가", initialValues = null, onSubmi
 
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append("title", title);
-      const venueId = venue?.venueId ?? venue?.id;
-      if (venueId != null) formData.append("venueId", venueId);
-      formData.append("startDate", period.startDate);
-      formData.append("endDate", period.endDate ?? period.startDate);
-      formData.append("type", exhibitionType.type);
-      if (exhibitionType.artistName) formData.append("artistName", exhibitionType.artistName);
-      formData.append("genre", genre.value);
-      if (posterFile) formData.append("poster", posterFile);
+      let posterUrl;
+      if (posterFile) {
+        const uploaded = await uploadMedia(posterFile);
+        posterUrl = uploaded.url;
+      }
 
-      const response = await addPersonalExhibition(formData);
+      const venueId = venue?.venueId ?? venue?.id;
+      const genreCode = genre?.codes?.[0];
+
+      const payload = {
+        title,
+        venueId,
+        place: venue?.name,
+        startDate: period.startDate,
+        endDate: period.endDate ?? period.startDate,
+        region: venue?.region,
+        category: genreCode,
+        format: exhibitionType.type?.toUpperCase(),
+        artist: exhibitionType.artistName || undefined,
+        posterUrl,
+        genreKeyword: genre?.label,
+      };
+
+      const response = await addPersonalExhibition(payload);
       const exhibitionId = response.data.data?.exhibitionId ?? null;
 
       setExhibitionDraft(draft);
