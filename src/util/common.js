@@ -21,3 +21,11 @@ export function formatMonthDay(dateString) {
   const [, month, day] = dateString.split("-").map(Number);
   return `${month}.${day}`;
 }
+
+// "YYYY-MM-DD" -> "YYYY. MM. DD"
+export function formatDateDot(dateKey) {
+  if (!dateKey) return "";
+  const [year, month, day] = dateKey.split("-");
+  if (!year || !month || !day) return dateKey;
+  return `${year}. ${month}. ${day}`;
+}
