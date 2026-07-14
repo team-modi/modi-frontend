@@ -21,8 +21,6 @@ function formatDateDot(dateKey) {
   return `${year}년 ${Number(month)}월 ${Number(day)}일`;
 }
 
-// 전시 선택(RecordExhibitionSelectPage) 또는 전시 직접 추가(RecordPage) 다음 단계.
-// 관람일 · 감정 키워드 · 미디어(사진/영상)를 입력받아 스토어에 채워 넣고, 이후 모드 선택(RecordModePage)으로 이어짐.
 export default function RecordDetailInputPage() {
   const navigate = useNavigate();
   const exhibitionDraft = useRecordDraftStore((state) => state.exhibitionDraft);
@@ -36,6 +34,8 @@ export default function RecordDetailInputPage() {
   const [isDateSheetOpen, setIsDateSheetOpen] = useState(false);
   const [isEmotionSheetOpen, setIsEmotionSheetOpen] = useState(false);
   const [isMediaSheetOpen, setIsMediaSheetOpen] = useState(false);
+  // item.url별로 로드 실패 여부를 기록 — 깨진 URL이나 R2 접근 오류 등으로 이미지/영상이 안 열리면 자리에 "불러오기 실패"를 보여준다.
+  const [mediaLoadErrors, setMediaLoadErrors] = useState({});
 
   const handleAddMedia = (items) => {
     const next = [...media, ...items].slice(0, MAX_MEDIA).map((item, index) => ({ ...item, sortOrder: index }));
@@ -47,7 +47,6 @@ export default function RecordDetailInputPage() {
     setMedia(next);
   };
 
-  // TODO: 감정 키워드/미디어는 화면 문구("있다면 추가해 주세요")상 선택 사항으로 보여 필수값에서 제외함 — 관람일만 필수로 처리.
   const isReady = Boolean(viewedAt);
 
   const handleNext = () => {
@@ -140,15 +139,27 @@ export default function RecordDetailInputPage() {
               </button>
               {media.map((item, index) => (
                 <div key={item.url} className="record-detail-media-thumb">
-                  {item.type === "VIDEO" ? (
+                  {mediaLoadErrors[item.url] ? (
+                    <span className="record-detail-media-error text-caption-1">불러오기 실패</span>
+                  ) : item.type === "VIDEO" ? (
                     <>
-                      <video src={item.url} className="record-detail-media-thumb-media" muted />
+                      <video
+                        src={item.url}
+                        className="record-detail-media-thumb-media"
+                        muted
+                        onError={() => setMediaLoadErrors((prev) => ({ ...prev, [item.url]: true }))}
+                      />
                       <span className="record-detail-media-play">
                         <PlayIcon />
                       </span>
                     </>
                   ) : (
-                    <img src={item.url} alt="" className="record-detail-media-thumb-media" />
+                    <img
+                      src={item.url}
+                      alt=""
+                      className="record-detail-media-thumb-media"
+                      onError={() => setMediaLoadErrors((prev) => ({ ...prev, [item.url]: true }))}
+                    />
                   )}
                   <button
                     type="button"

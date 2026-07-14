@@ -19,8 +19,6 @@ import { REGION_CODE_MAP, GENRE_CODE_MAP, toCodeParam } from "@utils/filterCodes
 // styles
 import "@styles/record/RecordExhibitionSelectPage.css";
 
-// "기록 작성" 플로우의 진입 화면 — 기존에 다녀온 전시 중 하나를 골라서 기록을 남기거나,
-// 목록에 없으면(직접 추가한 전시 등) "전시 직접 추가하기"로 RecordPage(수동 등록 폼)로 이동.
 export default function RecordExhibitionSelectPage() {
   const navigate = useNavigate();
   const setExhibitionDraft = useRecordDraftStore((state) => state.setExhibitionDraft);
@@ -48,11 +46,7 @@ export default function RecordExhibitionSelectPage() {
         });
         const content = response.data.data.content ?? [];
         setExhibitions(content);
-        // TODO: 전체 개수(총 N개)를 응답의 totalElements 등에서 받아와야 하는데
-        // getExhibitionList 응답의 정확한 페이지네이션 필드명을 확인 못해서 우선 여러 후보 키를 확인함.
-        setTotalCount(
-          response.data.data.totalElements ?? response.data.data.totalCount ?? content.length,
-        );
+        setTotalCount(response.data.data.totalElements ?? response.data.data.totalCount ?? content.length);
       } catch (error) {
         console.log(error);
       }

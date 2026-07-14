@@ -51,7 +51,6 @@ export default function RecordComposePage() {
 
     setIsSubmitting(true);
     try {
-      // 직접작성(RecordWritePage)과 대칭되는 writeMode 구분 (백엔드 확인 필요)
       const response = await addRecord({
         exhibitionId,
         writeMode: "AI",

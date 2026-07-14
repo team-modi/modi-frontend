@@ -18,7 +18,6 @@ export default function RecordCompletePage() {
   const handleGoToRecord = () => {
     const targetId = recordId;
     reset();
-    // GET /api/v1/records/{recordId} 호출은 DetailRecordPage 자체에서 수행함
     navigate(targetId ? `/record/${targetId}` : "/yeowun");
   };
 

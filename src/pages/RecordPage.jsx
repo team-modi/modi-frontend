@@ -60,10 +60,11 @@ const RecordPage = ({ pageTitle = "전시 추가", initialValues = null, onSubmi
   const handleSubmit = async () => {
     if (!isReady || isSubmitting) return;
 
-    // RecordDetailInputPage/RecordExhibitionSelectPage와 공통으로 쓰는 정규화된 요약 형태
     const draft = {
       title,
-      artistLine: exhibitionType.artistName ? `${exhibitionType.label} · ${exhibitionType.artistName}` : exhibitionType.label,
+      artistLine: exhibitionType.artistName
+        ? `${exhibitionType.label} · ${exhibitionType.artistName}`
+        : exhibitionType.label,
       venueLine: venue?.name ?? "",
       posterUrl: posterPreviewUrl,
       startDate: period.startDate,
@@ -72,8 +73,6 @@ const RecordPage = ({ pageTitle = "전시 추가", initialValues = null, onSubmi
 
     setIsSubmitting(true);
     try {
-      // 개인(직접 추가) 전시 등록 — 여기서 발급받은 exhibitionId를 이후 기록 작성(POST /records) 단계에서 사용함.
-      // TODO: addPersonalExhibition의 정확한 필드명(venueId vs venue, type vs exhibitionType 등)은 백엔드와 확인 필요 — 우선 알고 있는 필드명으로 채움
       const formData = new FormData();
       formData.append("title", title);
       const venueId = venue?.venueId ?? venue?.id;

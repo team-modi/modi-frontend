@@ -35,6 +35,7 @@ export default function MediaAttachSheet({ isOpen, onClose, remaining, onAdd }) 
       onAdd?.(uploaded);
       onClose?.();
     } catch (err) {
+      console.log(err);
       setError(err?.message || "업로드에 실패했어요.");
     } finally {
       setIsUploading(false);
@@ -42,9 +43,9 @@ export default function MediaAttachSheet({ isOpen, onClose, remaining, onAdd }) 
   };
 
   const handleInputChange = (event) => {
-    const { files } = event.target;
+    const fileArray = Array.from(event.target.files ?? []);
     event.target.value = ""; // 같은 파일 다시 선택 가능하도록 비움
-    handleFiles(files);
+    handleFiles(fileArray);
   };
 
   return (
