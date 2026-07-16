@@ -47,7 +47,7 @@ export default function RecordDetailInputPage() {
     setMedia(next);
   };
 
-  const isReady = Boolean(viewedAt);
+  const isReady = Boolean(viewedAt) && emotionCodes.length > 0;
 
   const handleNext = () => {
     if (!isReady) return;

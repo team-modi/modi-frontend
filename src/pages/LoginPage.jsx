@@ -5,13 +5,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { login } from "@api/auth";
 
 // util
-import {
-  startKakaoLogin,
-  startNaverLogin,
-  takeProvider,
-  consumeState,
-  isNaverConfigured,
-} from "@utils/oauth";
+import { startKakaoLogin, startNaverLogin, takeProvider, consumeState, isNaverConfigured } from "@utils/oauth";
+
+// router
+import { REDIRECT_AFTER_LOGIN_KEY } from "@router/RootRedirect";
 
 // components
 import Header from "@components/common/Header";
@@ -47,7 +44,10 @@ export default function LoginPage() {
       try {
         const response = await login(provider, code, state);
         if (response.data.meta.result === "SUCCESS") {
-          navigate("/yeowun");
+          // RequireAuth가 로그인으로 보내기 전 sessionStorage에 적어둔 원래 경로가 있으면 거기로, 없으면 /yeowun으로 이동
+          const redirectTo = sessionStorage.getItem(REDIRECT_AFTER_LOGIN_KEY);
+          sessionStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY);
+          navigate(redirectTo || "/yeowun", { replace: true });
         } else {
           setStatus("error");
         }
@@ -77,19 +77,11 @@ export default function LoginPage() {
         </div>
         {status === "error" && <p role="alert">로그인에 실패했어요. 다시 시도해 주세요.</p>}
         <div className="login-buttons">
-          <button
-            type="button"
-            className="login-button login-button--kakao"
-            onClick={startKakaoLogin}
-          >
+          <button type="button" className="login-button login-button--kakao" onClick={startKakaoLogin}>
             카카오로 로그인
           </button>
           {isNaverConfigured() && (
-            <button
-              type="button"
-              className="login-button login-button--naver"
-              onClick={startNaverLogin}
-            >
+            <button type="button" className="login-button login-button--naver" onClick={startNaverLogin}>
               네이버로 로그인
             </button>
           )}

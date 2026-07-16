@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "@api/auth";
 import { getUserInfo, updateUserInfo } from "@api/user";
 
+// router
+import { REDIRECT_AFTER_LOGIN_KEY } from "@router/RootRedirect";
+
 const ProfilePage = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState([]);
@@ -13,6 +16,7 @@ const ProfilePage = () => {
     try {
       const response = await logout();
       if (response.data.meta.result === "SUCCESS") {
+        sessionStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY);
         navigate("/login");
       }
     } catch (err) {

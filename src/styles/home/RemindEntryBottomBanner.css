@@ -1,0 +1,51 @@
+.remind-bottom-banner {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--footer-height) + 12px);
+  width: calc(var(--app-width) - 32px);
+  max-width: calc(100% - 32px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background-color: var(--color-surface-default);
+  box-shadow: 0 4px 16px rgba(20, 22, 28, 0.14);
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.remind-bottom-banner-thumb {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: var(--color-brand-subtle);
+  background-size: cover;
+  background-position: center;
+}
+
+.remind-bottom-banner-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.remind-bottom-banner-badge {
+  align-self: flex-start;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background-color: var(--color-brand-subtle);
+  color: var(--color-text-secondary);
+}
+
+.remind-bottom-banner-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+}
