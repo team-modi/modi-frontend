@@ -1,11 +1,15 @@
 import axiosInstance from "@utils/axiosInstance";
 import axios from "axios";
+import { oauthRedirectUri } from "@utils/oauth";
 
-// 소셜 로그인 (가입 겸용)
-export const login = async (provider, code) => {
+// 소셜 로그인 (가입 겸용). 카카오·네이버 공통 — provider 별 code 를 백엔드에서 교환한다.
+// redirectUri 는 authorize 요청에 쓴 값과 정확히 일치해야 한다.
+// state 는 네이버 토큰 교환에 필요(카카오는 미사용 — 백엔드에서 nullable).
+export const login = async (provider, code, state) => {
   const data = await axiosInstance.post(`/auth/login/${provider}`, {
     code,
-    redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+    redirectUri: oauthRedirectUri(),
+    state,
   });
   return data;
 };

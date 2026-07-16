@@ -4,14 +4,17 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 // api
 import { login } from "@api/auth";
 
+// util
+import {
+  startKakaoLogin,
+  startNaverLogin,
+  takeProvider,
+  consumeState,
+  isNaverConfigured,
+} from "@utils/oauth";
+
 // components
 import Header from "@components/common/Header";
-
-const KAKAO_AUTH_URL =
-  "https://kauth.kakao.com/oauth/authorize" +
-  `?client_id=${import.meta.env.VITE_KAKAO_CLIENT_ID}` +
-  `&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}` +
-  "&response_type=code";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -19,6 +22,7 @@ export default function LoginPage() {
   const [status, setStatus] = useState("idle");
   const exchangedRef = useRef(false);
   const code = searchParams.get("code");
+  const returnedState = searchParams.get("state");
 
   useEffect(() => {
     if (!code || exchangedRef.current) return;
@@ -26,23 +30,33 @@ export default function LoginPage() {
     setStatus("loading");
 
     (async () => {
+      // 콜백에서 어떤 소셜(kakao|naver)로 시작했는지는 sessionStorage 에 저장해 둔 값으로 구분한다.
+      const provider = takeProvider();
+
+      // 네이버는 state(CSRF) 검증 필수 — authorize 때 보낸 값과 콜백 state 가 일치해야 진행.
+      let state;
+      if (provider === "naver") {
+        state = consumeState(returnedState);
+        if (!state) {
+          console.error("네이버 로그인 실패: state 불일치(CSRF)");
+          setStatus("error");
+          return;
+        }
+      }
+
       try {
-        const response = await login("kakao", code);
+        const response = await login(provider, code, state);
         if (response.data.meta.result === "SUCCESS") {
           navigate("/yeowun");
         } else {
           setStatus("error");
         }
       } catch (err) {
-        console.error("카카오 로그인 실패:", err);
+        console.error(`${provider} 로그인 실패:`, err);
         setStatus("error");
       }
     })();
-  }, [code, navigate]);
-
-  const handleLogin = () => {
-    window.location.href = KAKAO_AUTH_URL;
-  };
+  }, [code, returnedState, navigate]);
 
   if (status === "loading")
     return (
@@ -62,9 +76,24 @@ export default function LoginPage() {
           여운을 남겨보세요
         </div>
         {status === "error" && <p role="alert">로그인에 실패했어요. 다시 시도해 주세요.</p>}
-        <button type="button" className="login-button" onClick={handleLogin}>
-          카카오로 로그인
-        </button>
+        <div className="login-buttons">
+          <button
+            type="button"
+            className="login-button login-button--kakao"
+            onClick={startKakaoLogin}
+          >
+            카카오로 로그인
+          </button>
+          {isNaverConfigured() && (
+            <button
+              type="button"
+              className="login-button login-button--naver"
+              onClick={startNaverLogin}
+            >
+              네이버로 로그인
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
