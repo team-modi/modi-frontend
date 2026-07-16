@@ -6,6 +6,7 @@ import Footer from "@components/common/Footer";
 import SubHeader from "@components/exhibition/SubHeader";
 import ExhibitCard from "@components/exhibition/ExhibitCard";
 import BannerCarousel from "@components/home/BannerCarousel";
+import RemindEntryModal from "@components/common/RemindEntryModal";
 
 // api
 import { getExhibitionList, getExhibitionBanners } from "@api/exhibition";
@@ -111,6 +112,7 @@ const HomePage = () => {
         </div>
       </div>
       <Footer />
+      <RemindEntryModal />
     </div>
   );
 };

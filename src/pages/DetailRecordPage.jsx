@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 // components
 import Header from "@components/common/Header";
+import Footer from "@components/common/Footer";
 
 // api
 import { getDetailRecord } from "@api/record";
@@ -42,6 +43,7 @@ const DetailRecordPage = () => {
         <div className="app-content">
           <p className="detail-record-loading text-body-1-regular">로딩중...</p>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -106,6 +108,7 @@ const DetailRecordPage = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -29,3 +29,18 @@ export function formatDateDot(dateKey) {
   if (!year || !month || !day) return dateKey;
   return `${year}. ${month}. ${day}`;
 }
+
+const REMIND_COMPLETED_DATE_KEY = "modi:remindCompletedDate";
+
+function todayKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+}
+
+export function markRemindCompletedToday() {
+  localStorage.setItem(REMIND_COMPLETED_DATE_KEY, todayKey());
+}
+
+export function isRemindCompletedToday() {
+  return localStorage.getItem(REMIND_COMPLETED_DATE_KEY) === todayKey();
+}

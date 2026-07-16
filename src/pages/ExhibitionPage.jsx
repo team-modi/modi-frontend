@@ -4,6 +4,7 @@ import { useState } from "react";
 import Header from "@components/common/Header";
 import ExhibitionList from "@components/layout/ExhibitionList";
 import SearchBox from "@components/layout/SearchBox";
+import RemindEntryBanner from "@components/common/RemindEntryBanner";
 
 const ExhibitionPage = () => {
   const [keyword, setKeyword] = useState("");
@@ -23,6 +24,7 @@ const ExhibitionPage = () => {
             onSubmit={handleSearch}
             placeholder="전시명을 검색해보세요"
           />
+          <RemindEntryBanner />
           <ExhibitionList data={{ keyword: searchKeyword }} />
         </div>
       </div>

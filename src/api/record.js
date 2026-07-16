@@ -19,8 +19,9 @@ export const addRecord = async (params) => {
 };
 
 // 기록 수정
-export const updateRecord = async (recordId) => {
-  const data = await axiosInstance.put(`/records/${recordId}`);
+// PUT은 부분 patch가 아니라 완전 교체라 media를 안 보내면 기존 사진/영상이 다 지워짐 => 사진을 유지하기위해 호출부가 현재 media를 다시 조회해서 그대로 같이 실어보냄
+export const updateRecord = async (recordId, params) => {
+  const data = await axiosInstance.put(`/records/${recordId}`, params);
   return data;
 };
 

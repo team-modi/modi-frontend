@@ -1,0 +1,52 @@
+.remind-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.remind-complete-thumb {
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  background-color: var(--color-brand-subtle);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-disabled);
+  margin-bottom: 24px;
+}
+
+.remind-complete-title {
+  margin: 0 0 8px;
+  color: var(--color-text-primary);
+}
+
+.remind-complete-subtitle {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+.remind-complete-footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--app-width);
+  max-width: 100%;
+  padding: 16px 20px calc(16px + env(safe-area-inset-bottom));
+  background-color: var(--color-surface-default);
+  box-sizing: border-box;
+}
+
+.remind-complete-btn {
+  width: 100%;
+  padding: 16px 0;
+  border-radius: 14px;
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
