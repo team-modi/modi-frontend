@@ -75,7 +75,9 @@
 }
 
 .exhibit-card-date {
+  margin: 0;
   font-size: 12px;
+  color: var(--color-text-sub);
   font-weight: var(--fw-regular);
 }
 
@@ -105,6 +107,38 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 16px;
+  width: 100%;
+}
+
+/* type=vertical 아카이브 */
+.exhibit-card-v-thumb--fluid {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-disabled);
+}
+
+.exhibit-card-title--clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.exhibit-card-emotion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.exhibit-card-emotion-chip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: var(--color-brand-subtle);
+  color: var(--color-text-secondary);
 }
 
 .exhibit-card-v-content {

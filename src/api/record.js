@@ -1,8 +1,8 @@
 import axiosInstance from "@utils/axiosInstance";
 
 // 내 기록 목록 조회
-export const getRecordList = async () => {
-  const data = await axiosInstance.get("/records");
+export const getRecordList = async (params) => {
+  const data = await axiosInstance.get("/records", { params });
   return data;
 };
 

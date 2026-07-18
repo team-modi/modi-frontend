@@ -55,3 +55,20 @@
   display: flex;
   align-items: center;
 }
+
+.app-header--archive {
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+}
+
+.header-title-left {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.header-right-placeholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: var(--color-border-default);
+}

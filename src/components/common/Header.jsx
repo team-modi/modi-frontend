@@ -22,6 +22,17 @@ const Header = ({ type, title, onBack }) => {
     );
   }
 
+  if (type === "archive") {
+    return (
+      <header className="app-header app-header--archive">
+        <h1 className="header-title-left text-heading-1">{title}</h1>
+        <div className="header-right-slot">
+          <div className="header-right-placeholder" />
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="app-header app-header--main">
       <div className="header-logo">Logo</div>

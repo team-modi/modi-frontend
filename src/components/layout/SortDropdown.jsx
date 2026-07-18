@@ -1,17 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 
-const SORT_OPTIONS = [
+const DEFAULT_SORT_OPTIONS = [
   { value: "latest", label: "최신순" },
   { value: "ending", label: "종료순" },
   { value: "popular", label: "인기순" },
   { value: "distance", label: "거리순" },
 ];
 
-export default function SortDropdown({ value, onChange }) {
+export default function SortDropdown({ value, onChange, options = DEFAULT_SORT_OPTIONS }) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
-  const selected = SORT_OPTIONS.find((option) => option.value === value) ?? SORT_OPTIONS[0];
+  const selected = options.find((option) => option.value === value) ?? options[0];
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -37,7 +37,7 @@ export default function SortDropdown({ value, onChange }) {
 
       {isOpen && (
         <ul className="sort-dropdown-menu">
-          {SORT_OPTIONS.map((option) => (
+          {options.map((option) => (
             <li key={option.value}>
               <button
                 type="button"

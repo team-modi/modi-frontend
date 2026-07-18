@@ -22,6 +22,14 @@ export function formatMonthDay(dateString) {
   return `${month}.${day}`;
 }
 
+// "YYYY-MM-DD" -> "MM.DD"
+export function formatMonthDayDot(dateKey) {
+  if (!dateKey) return "";
+  const [, month, day] = dateKey.split("-");
+  if (!month || !day) return dateKey;
+  return `${month}.${day}`;
+}
+
 // "YYYY-MM-DD" -> "YYYY. MM. DD"
 export function formatDateDot(dateKey) {
   if (!dateKey) return "";

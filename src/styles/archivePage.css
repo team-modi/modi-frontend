@@ -1,0 +1,34 @@
+/* ArchivePage.jsx */
+.archive-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.archive-sort-row {
+  display: flex;
+  align-items: center;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 12px;
+}
+
+.archive-empty {
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--color-text-tertiary);
+}
+
+.archive-sentinel {
+  height: 1px;
+}
+
+.archive-loading,
+.archive-loading-more {
+  padding: 20px 0;
+  text-align: center;
+  color: var(--color-text-tertiary);
+}

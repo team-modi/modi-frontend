@@ -8,6 +8,7 @@ import ProfilePage from "@pages/ProfilePage";
 import ExhibitionPage from "@pages/ExhibitionPage";
 import DetailExhibitionPage from "@pages/DetailExhibitionPage";
 import DetailRecordPage from "@pages/DetailRecordPage";
+import ArchivePage from "@pages/ArchivePage";
 import RecordPage from "@pages/RecordPage";
 import RecordExhibitionSelectPage from "@pages/record/RecordExhibitionSelectPage";
 import RecordDetailInputPage from "@pages/record/RecordDetailInputPage";
@@ -106,6 +107,14 @@ export const router = createBrowserRouter([
     element: (
       <RequireAuth>
         <DetailRecordPage />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/archive",
+    element: (
+      <RequireAuth>
+        <ArchivePage />
       </RequireAuth>
     ),
   },
