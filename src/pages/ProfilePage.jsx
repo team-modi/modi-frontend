@@ -9,10 +9,12 @@ import Footer from "@components/common/Footer";
 // api
 import { getUserInfo } from "@api/user";
 
-// styles
-import "@styles/profile/profilePage.css";
+// icons
+import writeIcon from "@images/icons/Action/Write.svg";
+import ticketIcon from "@images/icons/Info/Ticket.svg";
+import bookmarkDefaultIcon from "@images/icons/Action/Bookmark_Default.svg";
 
-const KEYWORD_PREVIEW_COUNT = 6;
+const KEYWORD_PREVIEW_COUNT = 9;
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -67,6 +69,7 @@ const ProfilePage = () => {
             />
             <p className="profile-nickname text-title-3">{userInfo.nickname}</p>
             <button type="button" className="profile-edit-btn text-label-2" onClick={() => navigate("/profile/edit")}>
+              <img src={writeIcon} alt="" width={14} height={14} />
               프로필 수정
             </button>
           </div>
@@ -79,43 +82,45 @@ const ProfilePage = () => {
                 className="profile-stat-card"
                 onClick={() => navigate("/profile/visited-exhibitions")}
               >
-                <span className="profile-stat-count text-title-2">{userInfo.stats?.exhibitionCount ?? 0}</span>
+                <img src={ticketIcon} alt="" width={28} height={28} />
                 <span className="profile-stat-label text-body-2-regular">기록한 전시</span>
+                <span className="profile-stat-count text-title-2">{userInfo.stats?.exhibitionCount ?? 0}</span>
               </button>
               <button
                 type="button"
                 className="profile-stat-card"
                 onClick={() => navigate("/profile/bookmarked-exhibitions")}
               >
-                <span className="profile-stat-count text-title-2">{userInfo.stats?.bookmarkCount ?? 0}</span>
+                <img src={bookmarkDefaultIcon} alt="" width={28} height={28} />
                 <span className="profile-stat-label text-body-2-regular">관심 전시</span>
+                <span className="profile-stat-count text-title-2">{userInfo.stats?.bookmarkCount ?? 0}</span>
               </button>
             </div>
           </section>
 
           <section className="profile-section">
-            <h2 className="profile-section-title text-heading-2">나의 감정 키워드</h2>
+            <div className="profile-section-header">
+              <h2 className="profile-section-title text-heading-2">나의 감정 키워드</h2>
+              {keywords.length > KEYWORD_PREVIEW_COUNT && (
+                <button
+                  type="button"
+                  className="profile-keyword-more text-label-2"
+                  onClick={() => setShowAllKeywords((prev) => !prev)}
+                >
+                  {showAllKeywords ? "접기" : "더보기"}
+                </button>
+              )}
+            </div>
             {keywords.length === 0 ? (
               <p className="profile-keyword-empty text-body-2-regular">아직 쌓인 감정 키워드가 없어요</p>
             ) : (
-              <>
-                <div className="profile-keyword-chips">
-                  {visibleKeywords.map((keyword) => (
-                    <span key={keyword} className="profile-keyword-chip text-label-3">
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-                {keywords.length > KEYWORD_PREVIEW_COUNT && (
-                  <button
-                    type="button"
-                    className="profile-keyword-more text-label-2"
-                    onClick={() => setShowAllKeywords((prev) => !prev)}
-                  >
-                    {showAllKeywords ? "접기" : "더보기"}
-                  </button>
-                )}
-              </>
+              <div className="profile-keyword-chips">
+                {visibleKeywords.map((keyword) => (
+                  <span key={keyword} className="profile-keyword-chip text-label-3">
+                    #{keyword}
+                  </span>
+                ))}
+              </div>
             )}
           </section>
         </div>

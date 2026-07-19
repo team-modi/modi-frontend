@@ -10,12 +10,8 @@ import ExhibitCard from "@components/exhibition/ExhibitCard";
 // api
 import { getRecordList } from "@api/record";
 
-const PAGE_SIZE = 20;
-const SORT_OPTIONS = [
-  { value: "latest", label: "최신순" },
-  { value: "oldest", label: "오래된순" },
-];
-
+// utils
+import { SORT_OPTIONS } from "@utils/filterCodes";
 const SORT_PARAM = { latest: "viewedAt,desc", oldest: "viewedAt,asc" };
 
 export default function ArchivePage() {
@@ -33,7 +29,7 @@ export default function ArchivePage() {
     (async () => {
       setIsLoading(true);
       try {
-        const response = await getRecordList({ sort: SORT_PARAM[sort], size: PAGE_SIZE, page: 0 });
+        const response = await getRecordList({ sort: SORT_PARAM[sort], size: 20, page: 0 });
         if (ignore) return;
         const data = response.data.data;
         setRecords(data.content ?? []);
@@ -60,7 +56,7 @@ export default function ArchivePage() {
     const nextPage = page + 1;
     setIsLoadingMore(true);
     try {
-      const response = await getRecordList({ sort: SORT_PARAM[sort], size: PAGE_SIZE, page: nextPage });
+      const response = await getRecordList({ sort: SORT_PARAM[sort], size: 20, page: nextPage });
       const data = response.data.data;
       setRecords((prev) => [...prev, ...(data.content ?? [])]);
       setPage(nextPage);
