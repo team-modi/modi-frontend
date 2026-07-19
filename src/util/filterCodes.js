@@ -87,3 +87,8 @@ export const TYPE_OPTIONS = [
   { value: "curated", label: "기획전" },
   { value: "artfair", label: "아트페어" },
 ];
+
+export const SORT_OPTIONS = [
+  { value: "latest", label: "최신순" },
+  { value: "oldest", label: "오래된순" },
+];
