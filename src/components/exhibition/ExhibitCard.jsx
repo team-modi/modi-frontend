@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // utils
-import { getDday, formatMonthDay, formatMonthDayDot } from "@utils/common";
+import { getDaysUntil, formatMonthDayDot, formatDateRange } from "@utils/common";
+
+// api
+import { addExhibitionBookmark, deleteExhibitionBookmark } from "@api/exhibition";
+
+// icons
+import bookmarkDefaultIcon from "@images/icons/Action/Bookmark_Default.svg";
+import bookmarkSelectedIcon from "@images/icons/Action/Bookmark_Selected.svg";
 
 const MAX_VISIBLE_EMOTIONS = 2;
 
@@ -22,10 +30,39 @@ const ExhibitCard = ({
   bookmarked,
 }) => {
   const navigate = useNavigate();
-  const dday = getDday(endDate);
-  const openDate = formatMonthDay(startDate);
   const isRecord = recordId != null;
+
+  const daysUntilEnd = getDaysUntil(endDate);
+  const endBadge =
+    daysUntilEnd == null || daysUntilEnd < 0 ? null : daysUntilEnd === 0 ? "오늘 종료" : `${daysUntilEnd}일 후 종료`;
+
+  const daysUntilStart = getDaysUntil(startDate);
+  const startBadge = daysUntilStart == null ? null : daysUntilStart <= 0 ? "오픈" : `${daysUntilStart}일 후 오픈`;
   const handleClick = () => navigate(isRecord ? `/record/${recordId}` : `/exhibition/${exhibitionId}`);
+
+  const [prevBookmarkedKey, setPrevBookmarkedKey] = useState({ exhibitionId, bookmarked });
+  const [isBookmarked, setIsBookmarked] = useState(Boolean(bookmarked));
+
+  if (prevBookmarkedKey.exhibitionId !== exhibitionId || prevBookmarkedKey.bookmarked !== bookmarked) {
+    setPrevBookmarkedKey({ exhibitionId, bookmarked });
+    setIsBookmarked(Boolean(bookmarked));
+  }
+
+  const handleToggleBookmark = async (event) => {
+    event.stopPropagation();
+    const next = !isBookmarked;
+    setIsBookmarked(next);
+    try {
+      if (next) {
+        await addExhibitionBookmark(exhibitionId);
+      } else {
+        await deleteExhibitionBookmark(exhibitionId);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsBookmarked(!next);
+    }
+  };
 
   if (type === "vertical") {
     const codes = emotionCodes ?? [];
@@ -33,12 +70,22 @@ const ExhibitCard = ({
     const hiddenCount = codes.length - visibleCodes.length;
 
     return (
-      <button type="button" className="exhibit-card-v" onClick={handleClick}>
+      <div className="exhibit-card-v" onClick={handleClick} role="button" tabIndex={0}>
         <div
           className={`exhibit-card-v-thumb${isRecord ? " exhibit-card-v-thumb--fluid" : ""}`}
           style={thumbnail ? { backgroundImage: `url(${thumbnail})` } : undefined}
         >
           {isRecord && !thumbnail && <span className="text-caption-1">Poster</span>}
+          {!isRecord && (
+            <button
+              type="button"
+              className="exhibit-card-v-bookmark-btn"
+              onClick={handleToggleBookmark}
+              aria-label={isBookmarked ? "관심 전시 해제" : "관심 전시 등록"}
+            >
+              <img src={isBookmarked ? bookmarkSelectedIcon : bookmarkDefaultIcon} alt="" width={20} height={20} />
+            </button>
+          )}
         </div>
         <div className="exhibit-card-v-content-box">
           {isRecord ? (
@@ -65,12 +112,13 @@ const ExhibitCard = ({
               <p className="exhibit-card-title">{title}</p>
               <div className="exhibit-card-v-content">
                 <p className="exhibit-card-place">{place}</p>
-                <span className="exhibit-card-openDate">{openDate} 오픈</span>
+                <p className="exhibit-card-date">{dateRange ?? formatDateRange(startDate, endDate)}</p>
+                {startBadge && <span className="exhibit-card-openDate">{startBadge}</span>}
               </div>
             </>
           )}
         </div>
-      </button>
+      </div>
     );
   }
 
@@ -94,20 +142,28 @@ const ExhibitCard = ({
   }
 
   return (
-    <button type="button" className="exhibit-card" onClick={handleClick}>
+    <div className="exhibit-card" onClick={handleClick} role="button" tabIndex={0}>
       <div className="exhibit-card-thumb" style={thumbnail ? { backgroundImage: `url(${thumbnail})` } : undefined} />
       <div className="exhibit-card-content-box">
-        {dday && <span className="exhibit-card-dday">{dday}</span>}
         <div className="exhibit-card-content1">
           <p className="exhibit-card-title">{title}</p>
           {artistSummary && <p className="exhibit-card-artist text-caption-1">{artistSummary}</p>}
           <div className="exhibit-card-content2">
             <p className="exhibit-card-place">{place}</p>
-            <p className="exhibit-card-date">{dateRange ?? startDate}</p>
+            <p className="exhibit-card-date">{dateRange ?? formatDateRange(startDate, endDate)}</p>
+            {endBadge && <span className="exhibit-card-dday">{endBadge}</span>}
           </div>
         </div>
       </div>
-    </button>
+      <button
+        type="button"
+        className="exhibit-card-bookmark-btn"
+        onClick={handleToggleBookmark}
+        aria-label={isBookmarked ? "관심 전시 해제" : "관심 전시 등록"}
+      >
+        <img src={isBookmarked ? bookmarkSelectedIcon : bookmarkDefaultIcon} alt="" width={20} height={20} />
+      </button>
+    </div>
   );
 };
 

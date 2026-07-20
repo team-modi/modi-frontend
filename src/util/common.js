@@ -64,6 +64,16 @@ export function formatDateRange(startDate, endDate) {
   return `${start} ~ ${end}`;
 }
 
+// 오늘 기준 남은 일수("YYYY-MM-DD")
+export function getDaysUntil(dateString) {
+  if (!dateString) return null;
+  const [year, month, day] = dateString.split("-").map(Number);
+  const target = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export function formatElapsed(dateInput) {
   if (!dateInput) return "";
   const then = new Date(dateInput);

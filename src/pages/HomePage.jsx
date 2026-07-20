@@ -75,6 +75,7 @@ const HomePage = () => {
                   startDate={exhibit.startDate}
                   endDate={exhibit.endDate}
                   exhibitionId={exhibit.exhibitionId}
+                  bookmarked={exhibit.bookmarked}
                 />
               ))}
             </div>
@@ -90,7 +91,9 @@ const HomePage = () => {
                   title={exhibit.title}
                   place={exhibit.place}
                   startDate={exhibit.startDate}
+                  endDate={exhibit.endDate}
                   exhibitionId={exhibit.exhibitionId}
+                  bookmarked={exhibit.bookmarked}
                 />
               ))}
             </div>
@@ -106,6 +109,7 @@ const HomePage = () => {
                   place={exhibit.place}
                   startDate={exhibit.startDate}
                   exhibitionId={exhibit.exhibitionId}
+                  bookmarked={exhibit.bookmarked}
                 />
               ))}
             </div>
