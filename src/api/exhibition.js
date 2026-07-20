@@ -36,3 +36,9 @@ export const deleteExhibitionBookmark = async (exhibitionId) => {
   const data = await axiosInstance.delete(`/exhibitions/${exhibitionId}/bookmark`);
   return data;
 };
+
+// 전시 탐색 필터용 지역 그룹 목록 조회
+export const getRegionGroups = async () => {
+  const data = await axiosInstance.get("/exhibitions/region-groups");
+  return data;
+};

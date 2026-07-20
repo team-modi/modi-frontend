@@ -60,3 +60,21 @@ export const getRecordQuestions = async (exhibitionId) => {
   const data = await axiosInstance.post("/records/ai/questions", { exhibitionId });
   return data;
 };
+
+// 감상문 작성 임시저장(draft) 복원
+export const getRecordDraft = async (exhibitionId) => {
+  const data = await axiosInstance.get("/records/ai/draft", { params: { exhibitionId } });
+  return data;
+};
+
+// 감상문 작성 임시저장(draft) 저장
+export const saveRecordDraft = async (params) => {
+  const data = await axiosInstance.put("/records/ai/draft", params);
+  return data;
+};
+
+// 감상문 작성 임시저장(draft) 삭제
+export const deleteRecordDraft = async (exhibitionId) => {
+  const data = await axiosInstance.delete("/records/ai/draft", { params: { exhibitionId } });
+  return data;
+};

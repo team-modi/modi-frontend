@@ -102,6 +102,28 @@
                 },
                 "type": "object"
             },
+            "ApiResponseDraftResponse": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/DraftResponse"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponseEligibleAfter": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/EligibleAfter"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Metadata"
+                    }
+                },
+                "type": "object"
+            },
             "ApiResponseMeResponse": {
                 "properties": {
                     "data": {
@@ -843,8 +865,8 @@
                         "type": "array"
                     },
                     "operatingHours": {
-                        "description": "\uc6b4\uc601\uc2dc\uac04. \ub370\uc774\ud130 \uc5c6\uc73c\uba74 null.",
-                        "example": "10:00~19:00(\uc6d4\uc694\uc77c \ud734\uad00)",
+                        "description": "\uc6b4\uc601\uc2dc\uac04(\uad6c\uae00 \uc9c0\ub3c4 \uae30\uc900, \uc5ec\ub7ec \uc904\uc740 \\n \uad6c\ubd84). \ub370\uc774\ud130 \uc5c6\uc73c\uba74 null.",
+                        "example": "\ub9e4\uc77c 10:00 ~ 18:00",
                         "type": [
                             "string",
                             "null"
@@ -880,12 +902,9 @@
                         ]
                     },
                     "price": {
-                        "description": "\uad00\ub78c \uac00\uaca9 \uc548\ub0b4. \ub370\uc774\ud130 \uc5c6\uc73c\uba74 null.",
+                        "description": "\uad00\ub78c \uac00\uaca9 \uc548\ub0b4. \uc6d0\ucc9c\uc5d0 \uac00\uaca9\uc774 \uc5c6\uc73c\uba74 \"\uad00\ub78c\ub8cc \uc815\ubcf4 \uc5c6\uc74c\".",
                         "example": "\uc131\uc778 20,000\uc6d0 / \uccad\uc18c\ub144 15,000\uc6d0",
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "recorded": {
                         "description": "\uc694\uccad\uc790\uac00 \uc774 \uc804\uc2dc\uc5d0 \ub300\ud55c \uae30\ub85d \ubcf4\uc720 \uc5ec\ubd80(\ube44\ub85c\uadf8\uc778 false). true\uba74 '\uae30\ub85d\ud558\uae30' \ubc84\ud2bc \ubd84\uae30.",
@@ -936,6 +955,83 @@
                     "viewCount": {
                         "description": "\uc0c1\uc138 \uc9c0\uc5f0\uc218\uc9d1 \ud544\ub4dc \u2014 \ub204\uc801 \uc870\ud68c\uc218. \ubbf8\uc218\uc9d1 \uc2dc 0.",
                         "example": 1024,
+                        "format": "int64",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "DraftQna": {
+                "properties": {
+                    "answer": {
+                        "maxLength": 300,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "question": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "DraftResponse": {
+                "properties": {
+                    "answers": {
+                        "items": {
+                            "$ref": "#/components/schemas/DraftQna"
+                        },
+                        "type": "array"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "exists": {
+                        "type": "boolean"
+                    },
+                    "questions": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "DraftSaveRequest": {
+                "properties": {
+                    "answers": {
+                        "items": {
+                            "$ref": "#/components/schemas/DraftQna"
+                        },
+                        "type": "array"
+                    },
+                    "content": {
+                        "maxLength": 300,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "exhibitionId": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "questions": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "exhibitionId"
+                ],
+                "type": "object"
+            },
+            "EligibleAfter": {
+                "properties": {
+                    "label": {
+                        "type": "string"
+                    },
+                    "seconds": {
                         "format": "int64",
                         "type": "integer"
                     }
@@ -1040,6 +1136,7 @@
                 "properties": {
                     "aiStatus": {
                         "enum": [
+                            "PENDING",
                             "READY",
                             "SKIPPED",
                             "FAILED"
@@ -1102,6 +1199,9 @@
                     },
                     "redirectUri": {
                         "minLength": 1,
+                        "type": "string"
+                    },
+                    "state": {
                         "type": "string"
                     }
                 },
@@ -1682,6 +1782,12 @@
                         "format": "date-time",
                         "type": "string"
                     },
+                    "emotionCodes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
                     "exhibitionCategory": {
                         "type": "string"
                     },
@@ -1824,6 +1930,44 @@
                 ],
                 "type": "object"
             },
+            "RegionGroupResponse": {
+                "properties": {
+                    "code": {
+                        "description": "\uadf8\ub8f9 \ucf54\ub4dc",
+                        "example": "GYEONGGI_INCHEON",
+                        "type": "string"
+                    },
+                    "label": {
+                        "description": "\uce69 \ub77c\ubca8",
+                        "example": "\uacbd\uae30\u00b7\uc778\ucc9c",
+                        "type": "string"
+                    },
+                    "regions": {
+                        "description": "\uadf8\ub8f9\uc5d0 \uc18d\ud55c \uc9c0\uc5ed \ucf54\ub4dc(\ubaa9\ub85d \uac80\uc0c9 region \ud30c\ub77c\ubbf8\ud130 \uac12)",
+                        "example": [
+                            "GYEONGGI",
+                            "INCHEON"
+                        ],
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
+            "RegionGroupsResponse": {
+                "properties": {
+                    "groups": {
+                        "description": "\uc9c0\uc5ed \ud544\ud130 \uadf8\ub8f9 \ubaa9\ub85d(\ub514\uc790\uc778 \uce69 \uc21c\uc11c \uadf8\ub300\ub85c).",
+                        "items": {
+                            "$ref": "#/components/schemas/RegionGroupResponse"
+                        },
+                        "type": "array"
+                    }
+                },
+                "type": "object"
+            },
             "RemindItem": {
                 "properties": {
                     "aiStatus": {
@@ -1931,6 +2075,7 @@
                     },
                     "aiStatus": {
                         "enum": [
+                            "PENDING",
                             "READY",
                             "SKIPPED",
                             "FAILED"
@@ -1984,6 +2129,19 @@
                     },
                     "user": {
                         "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateEligibleAfter": {
+                "properties": {
+                    "seconds": {
+                        "description": "\ub9ac\ub9c8\uc778\ub4dc \uc18c\ud658 \ub300\uae30 \uc2dc\uac04(\ucd08). \uc608: 3(\ubca0\ud0c0), 604800(\uc815\uc2dd 7\uc77c)",
+                        "example": 3,
+                        "format": "int64",
+                        "maximum": 2592000,
+                        "minimum": 1,
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -2314,6 +2472,68 @@
                 ]
             }
         },
+        "/api-admin/v1/reminds/eligible-after": {
+            "get": {
+                "description": "\ud604\uc7ac \ub9ac\ub9c8\uc778\ub4dc \uc18c\ud658 \ub300\uae30 \uc2dc\uac04(\ucd08 + \uc0ac\ub78c\uc774 \uc77d\ub294 \ud45c\uae30).",
+                "operationId": "getEligibleAfter",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseEligibleAfter"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc18c\ud658 \ub300\uae30 \uc2dc\uac04 \uc870\ud68c",
+                "tags": [
+                    "Admin - Remind"
+                ]
+            },
+            "put": {
+                "description": "\uae30\ub85d \uc791\uc131 \ud6c4 \ub9ac\ub9c8\uc778\ub4dc \ud6c4\ubcf4\uac00 \ub418\uae30\uae4c\uc9c0\uc758 \uacbd\uacfc \uc2dc\uac04\uc744 \uc989\uc2dc \ubcc0\uacbd(\ud504\ub85c\uc138\uc2a4 \uba54\ubaa8\ub9ac \u2014 \uc7ac\uc2dc\uc791 \uc2dc \uc124\uc815 \uae30\ubcf8\uac12 \ubcf5\uadc0).",
+                "operationId": "updateEligibleAfter",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateEligibleAfter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseEligibleAfter"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc18c\ud658 \ub300\uae30 \uc2dc\uac04 \ubcc0\uacbd",
+                "tags": [
+                    "Admin - Remind"
+                ]
+            }
+        },
         "/api-admin/v1/users": {
             "get": {
                 "description": "\ub2c9\ub124\uc784/\uc2e4\uba85 \uac80\uc0c9 + \uc0ac\uc6a9\uc790\ubcc4 \uae30\ub85d\u00b7\ub9ac\ub9c8\uc778\ub4dc\u00b7\ubd81\ub9c8\ud06c\u00b7API\ud638\ucd9c \uc218, \ub9c8\uc9c0\ub9c9 \ud65c\ub3d9. \ucd5c\uc2e0 \uac00\uc785\uc21c.",
@@ -2481,11 +2701,11 @@
         },
         "/api/v1/auth/login/{provider}": {
             "post": {
-                "description": "FE \uc8fc\ub3c4 \ud50c\ub85c\uc6b0. FE\uac00 \uc18c\uc15c \uc778\uac00\ub97c \ub9c8\uce5c \ub4a4 \ucf5c\ubc31\uc5d0\uc11c \ubc1b\uc740 authorization code\ub97c \uadf8\ub300\ub85c \ubcf4\ub0b8\ub2e4.\n- Path `provider`: `kakao` | `google` (\uc18c\ubb38\uc790).\n- Body: `code`(\uc18c\uc15c \uc778\uac00 \ucf54\ub4dc), `redirectUri`(\uc18c\uc15c \ucf58\uc194\u00b7\uc11c\ubc84 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\uc5d0 \ub4f1\ub85d\ub41c \uac12\uacfc \uc815\ud655\ud788 \uc77c\uce58\ud574\uc57c \ud568. \ubd88\uc77c\uce58 \uc2dc 400 INVALID_REDIRECT_URI).\n- \ucd5c\ucd08 \ub85c\uadf8\uc778\uc774\uba74 \ud68c\uc6d0\uc744 \uc790\ub3d9 \uc0dd\uc131(\uac00\uc785 \uacb8\uc6a9), \uc774\ud6c4\uc5d4 \uae30\uc874 \ud68c\uc6d0\uc73c\ub85c \ub85c\uadf8\uc778.\n- \uc751\ub2f5: `access`\u00b7`refresh` \ud1a0\ud070\uc744 **HttpOnly \ucfe0\ud0a4**\ub85c \ub0b4\ub824\uc900\ub2e4. \ube0c\ub77c\uc6b0\uc800 \ud074\ub77c\uc774\uc5b8\ud2b8\ub294 \uc774\ud6c4 \uc694\uccad\uc5d0 `credentials: 'include'`\ub9cc \ud558\uba74 \ub418\uace0 \ud1a0\ud070\uc744 \uc9c1\uc811 \uc800\uc7a5\ud560 \ud544\uc694\uac00 \uc5c6\ub2e4. \ube44\ucfe0\ud0a4 \ud074\ub77c\uc774\uc5b8\ud2b8(\ubaa8\ubc14\uc77c \ub4f1) \ud638\ud658\uc744 \uc704\ud574 `accessToken`\uc740 \uc751\ub2f5 \ubcf8\ubb38\uc5d0\ub3c4 \ud568\uaed8 \ubc18\ud658\ud55c\ub2e4.\n- \uc131\uacf5\uc740 \ud56d\uc0c1 200(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158).",
+                "description": "FE \uc8fc\ub3c4 \ud50c\ub85c\uc6b0. FE\uac00 \uc18c\uc15c \uc778\uac00\ub97c \ub9c8\uce5c \ub4a4 \ucf5c\ubc31\uc5d0\uc11c \ubc1b\uc740 authorization code\ub97c \uadf8\ub300\ub85c \ubcf4\ub0b8\ub2e4.\n- Path `provider`: `kakao` | `google` | `naver` (\uc18c\ubb38\uc790).\n- Body: `code`(\uc18c\uc15c \uc778\uac00 \ucf54\ub4dc), `redirectUri`(\uc18c\uc15c \ucf58\uc194\u00b7\uc11c\ubc84 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\uc5d0 \ub4f1\ub85d\ub41c \uac12\uacfc \uc815\ud655\ud788 \uc77c\uce58\ud574\uc57c \ud568. \ubd88\uc77c\uce58 \uc2dc 400 INVALID_REDIRECT_URI), `state`(\ub124\uc774\ubc84 \uc804\uc6a9 \u2014 \ub124\uc774\ubc84 \ud1a0\ud070 \uad50\ud658\uc5d0 \ud544\uc694. \uce74\uce74\uc624/\uad6c\uae00\uc740 \uc0dd\ub7b5).\n- \ucd5c\ucd08 \ub85c\uadf8\uc778\uc774\uba74 \ud68c\uc6d0\uc744 \uc790\ub3d9 \uc0dd\uc131(\uac00\uc785 \uacb8\uc6a9), \uc774\ud6c4\uc5d4 \uae30\uc874 \ud68c\uc6d0\uc73c\ub85c \ub85c\uadf8\uc778.\n- \uc751\ub2f5: `access`\u00b7`refresh` \ud1a0\ud070\uc744 **HttpOnly \ucfe0\ud0a4**\ub85c \ub0b4\ub824\uc900\ub2e4. \ube0c\ub77c\uc6b0\uc800 \ud074\ub77c\uc774\uc5b8\ud2b8\ub294 \uc774\ud6c4 \uc694\uccad\uc5d0 `credentials: 'include'`\ub9cc \ud558\uba74 \ub418\uace0 \ud1a0\ud070\uc744 \uc9c1\uc811 \uc800\uc7a5\ud560 \ud544\uc694\uac00 \uc5c6\ub2e4. \ube44\ucfe0\ud0a4 \ud074\ub77c\uc774\uc5b8\ud2b8(\ubaa8\ubc14\uc77c \ub4f1) \ud638\ud658\uc744 \uc704\ud574 `accessToken`\uc740 \uc751\ub2f5 \ubcf8\ubb38\uc5d0\ub3c4 \ud568\uaed8 \ubc18\ud658\ud55c\ub2e4.\n- \uc131\uacf5\uc740 \ud56d\uc0c1 200(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158).",
                 "operationId": "login",
                 "parameters": [
                     {
-                        "description": "\uc18c\uc15c provider \u2014 kakao | google",
+                        "description": "\uc18c\uc15c provider \u2014 kakao | google | naver",
                         "example": "kakao",
                         "in": "path",
                         "name": "provider",
@@ -2928,6 +3148,116 @@
                 ]
             }
         },
+        "/api/v1/exhibitions/region-groups": {
+            "get": {
+                "description": "\uc804\uc2dc\ud0d0\uc0c9 \ud544\ud130 \uc2dc\ud2b8\uc758 \uc9c0\uc5ed \uce69 \ubaa9\ub85d(\ub514\uc790\uc778 \ubcd1\ud569 \uadf8\ub8f9)\uc744 \uc870\ud68c\ud55c\ub2e4. \uacf5\uac1c API(\uc778\uc99d \ubd88\ud544\uc694).\n\uce69 1\uac1c = \uadf8\ub8f9 1\uac1c\uc774\uba70, \ubaa9\ub85d \uac80\uc0c9 \uc2dc \uc120\ud0dd\ud55c \uadf8\ub8f9\ub4e4\uc758 regions\ub97c \ucf64\ub9c8\ub85c \uc774\uc5b4\nGET /exhibitions\uc758 region \ud30c\ub77c\ubbf8\ud130\uc5d0 \uadf8\ub300\ub85c \ub123\ub294\ub2e4(\uc608: region=GYEONGGI,INCHEON).\n\uadf8\ub8f9 \uad6c\uc131\uc740 \uc11c\ubc84\uac00 \ub2e8\uc77c \uc18c\uc2a4\ub85c \uad00\ub9ac\ud55c\ub2e4 \u2014 \ud074\ub77c\uc774\uc5b8\ud2b8\ub294 \uc774 \uc751\ub2f5\uc744 \uadf8\ub300\ub85c \ub80c\ub354\ub9c1\ud55c\ub2e4.",
+                "operationId": "regionGroups",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "\uc9c0\uc5ed \uadf8\ub8f9 \uc870\ud68c \uc131\uacf5": {
+                                        "description": "\uc9c0\uc5ed \uadf8\ub8f9 \uc870\ud68c \uc131\uacf5",
+                                        "value": {
+                                            "data": {
+                                                "groups": [
+                                                    {
+                                                        "code": "SEOUL",
+                                                        "label": "\uc11c\uc6b8",
+                                                        "regions": [
+                                                            "SEOUL"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "GYEONGGI_INCHEON",
+                                                        "label": "\uacbd\uae30\u00b7\uc778\ucc9c",
+                                                        "regions": [
+                                                            "GYEONGGI",
+                                                            "INCHEON"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "GANGWON",
+                                                        "label": "\uac15\uc6d0",
+                                                        "regions": [
+                                                            "GANGWON"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "DAEJEON_SEJONG_CHUNGCHEONG",
+                                                        "label": "\ub300\uc804\u00b7\uc138\uc885\u00b7\ucda9\uccad",
+                                                        "regions": [
+                                                            "DAEJEON",
+                                                            "SEJONG",
+                                                            "CHUNGNAM",
+                                                            "CHUNGBUK"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "GWANGJU_JEOLLA",
+                                                        "label": "\uad11\uc8fc\u00b7\uc804\ub77c",
+                                                        "regions": [
+                                                            "GWANGJU",
+                                                            "JEONNAM",
+                                                            "JEONBUK"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "DAEGU_GYEONGBUK",
+                                                        "label": "\ub300\uad6c\u00b7\uacbd\ubd81",
+                                                        "regions": [
+                                                            "DAEGU",
+                                                            "GYEONGBUK"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "BUSAN_ULSAN_GYEONGNAM",
+                                                        "label": "\ubd80\uc0b0\u00b7\uc6b8\uc0b0\u00b7\uacbd\ub0a8",
+                                                        "regions": [
+                                                            "BUSAN",
+                                                            "ULSAN",
+                                                            "GYEONGNAM"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "JEJU",
+                                                        "label": "\uc81c\uc8fc",
+                                                        "regions": [
+                                                            "JEJU"
+                                                        ]
+                                                    },
+                                                    {
+                                                        "code": "ETC",
+                                                        "label": "\uae30\ud0c0",
+                                                        "regions": [
+                                                            "ETC"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "meta": {
+                                                "errorCode": null,
+                                                "message": null,
+                                                "result": "SUCCESS"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegionGroupsResponse"
+                                }
+                            }
+                        },
+                        "description": "\uc870\ud68c \uc131\uacf5"
+                    }
+                },
+                "summary": "\uc9c0\uc5ed \ud544\ud130 \uadf8\ub8f9 \uc870\ud68c",
+                "tags": [
+                    "Exhibition"
+                ]
+            }
+        },
         "/api/v1/exhibitions/{exhibitionId}": {
             "get": {
                 "description": "CATALOG\ub294 \uacf5\uac1c, CUSTOM\uc740 \ub4f1\ub85d\uc790 \ubcf8\uc778\ub9cc \uc870\ud68c \uac00\ub2a5. \uc778\uc99d\uc740 \uc120\ud0dd(Optional) \u2014\n\ube44\ub85c\uadf8\uc778\u00b7\ubb34\ud6a8 \ud1a0\ud070\uc774\uc5b4\ub3c4 CATALOG \uc804\uc2dc\ub294 \uc815\uc0c1 \uc870\ud68c\ub41c\ub2e4. \ub85c\uadf8\uc778 \uc2dc bookmarked\u00b7recorded \uac1c\uc778\ud654 \ud544\ub4dc\ub97c \ucc44\uc6b4\ub2e4.",
@@ -2973,7 +3303,7 @@
                                                     "\uc778\uc0c1\uc8fc\uc758",
                                                     "\ud68c\ud654"
                                                 ],
-                                                "operatingHours": "10:00~19:00(\uc6d4\uc694\uc77c \ud734\uad00)",
+                                                "operatingHours": "\ub9e4\uc77c 10:00 ~ 18:00",
                                                 "phone": "02-580-1300",
                                                 "place": "\uc608\uc220\uc758\uc804\ub2f9 \ud55c\uac00\ub78c\ubbf8\uc220\uad00",
                                                 "placeUrl": "https://www.sac.or.kr",
@@ -3477,6 +3807,117 @@
                     }
                 ],
                 "summary": "\uac10\uc0c1\ubb38 \ub2e4\ub4ec\uae30",
+                "tags": [
+                    "Record AI"
+                ]
+            }
+        },
+        "/api/v1/records/ai/draft": {
+            "delete": {
+                "description": "\uc9c4\ud589 \uc911 draft\ub97c \uc0ad\uc81c\ud55c\ub2e4(\uac10\uc0c1\ubb38 \uc800\uc7a5 \uc644\ub8cc\u00b7\uc791\uc131 \ud3ec\uae30 \uc2dc). \uc5c6\uc5b4\ub3c4 \uc131\uacf5\ud558\uba70, TTL\ub85c\ub3c4 \uc790\ub3d9 \uc815\ub9ac\ub41c\ub2e4.",
+                "operationId": "deleteDraft",
+                "parameters": [
+                    {
+                        "description": "\ub300\uc0c1 \uc804\uc2dc ID",
+                        "in": "query",
+                        "name": "exhibitionId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseObject"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc784\uc2dc\uc800\uc7a5(draft) \uc0ad\uc81c",
+                "tags": [
+                    "Record AI"
+                ]
+            },
+            "get": {
+                "description": "\uc804\uc2dc\uc5d0 \ub300\ud55c \uc9c4\ud589 \uc911 draft(\uc9c8\ubb38+\ub2f5\ubcc0+\ucd08\uc548)\ub97c \ubcf5\uc6d0\ud55c\ub2e4. \ub4a4\ub85c\uac00\uae30 \ud6c4 \uc7ac\uc9c4\uc785 \uc2dc \ud638\ucd9c\ud574 \uc0c1\ud0dc\ub97c \ucc44\uc6b4\ub2e4.\n- \uc5c6\uac70\ub098 \ub9cc\ub8cc\uba74 exists=false. \ub85c\uadf8\uc778 \uc804\uc6a9(\ubcf8\uc778 draft\ub9cc).",
+                "operationId": "getDraft",
+                "parameters": [
+                    {
+                        "description": "\ub300\uc0c1 \uc804\uc2dc ID",
+                        "in": "query",
+                        "name": "exhibitionId",
+                        "required": true,
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseDraftResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc784\uc2dc\uc800\uc7a5(draft) \ubcf5\uc6d0",
+                "tags": [
+                    "Record AI"
+                ]
+            },
+            "put": {
+                "description": "'\uc9c8\ubb38\uc73c\ub85c \uc791\uc131' \uc9c4\ud589 \uc0c1\ud0dc(\uc9c8\ubb38+\ub2f5\ubcc0+\ucd08\uc548)\ub97c \uc784\uc2dc\uc800\uc7a5\ud55c\ub2e4. \ub4a4\ub85c\uac00\uae30 \uc804 \uc790\ub3d9\uc800\uc7a5\uc6a9 \u2014 \uc7ac\uc9c4\uc785 \uc2dc GET\uc73c\ub85c \ubcf5\uc6d0\ud55c\ub2e4.\n- \ub85c\uadf8\uc778 \uc804\uc6a9. AI \ud638\ucd9c \uc544\ub2d8(\uce90\uc2dc \uc800\uc7a5)\uc774\ub77c rate-limit \uc5c6\uc74c. \uc800\uc7a5\uc18c \uc7a5\uc560 \uc2dc\uc5d0\ub3c4 \uc2e4\ud328\ub85c \ucc98\ub9ac\ud558\uc9c0 \uc54a\ub294\ub2e4(\ubd80\uac00 \uae30\ub2a5).",
+                "operationId": "saveDraft",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DraftSaveRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseDraftResponse"
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "\uc784\uc2dc\uc800\uc7a5(draft) \uc800\uc7a5",
                 "tags": [
                     "Record AI"
                 ]
@@ -4307,12 +4748,16 @@
     ],
     "tags": [
         {
-            "description": "\uad00\ub9ac\uc790 \uc0ac\uc6a9\uc790 \uc870\ud68c(\ubaa9\ub85d/\uc0c1\uc138). \uad00\ub9ac\uc790 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\ub9cc \uc811\uadfc.",
-            "name": "Admin - Users"
+            "description": "\uad00\ub9ac\uc790 \ub9ac\ub9c8\uc778\ub4dc \uc124\uc815. \uc18c\ud658 \ub300\uae30 \uc2dc\uac04\uc744 \uc7ac\ubc30\ud3ec \uc5c6\uc774 \ub7f0\ud0c0\uc784\uc5d0 \uc870\uc815(\uad00\ub9ac\uc790\ub9cc \uc811\uadfc).",
+            "name": "Admin - Remind"
         },
         {
             "description": "\uc9c8\ubb38\uc73c\ub85c \uc791\uc131 \u2014 \uc804\uc2dc \ub9e5\ub77d \uc9c8\ubb38 \uc0dd\uc131 \u00b7 Q&A \uac10\uc0c1\ubb38 \ub2e4\ub4ec\uae30",
             "name": "Record AI"
+        },
+        {
+            "description": "\uad00\ub9ac\uc790 \uc0ac\uc6a9\uc790 \uc870\ud68c(\ubaa9\ub85d/\uc0c1\uc138). \uad00\ub9ac\uc790 \ud654\uc774\ud2b8\ub9ac\uc2a4\ud2b8\ub9cc \uc811\uadfc.",
+            "name": "Admin - Users"
         },
         {
             "description": "\uc804\uc2dc\uad00 \uac80\uc0c9(\uc790\ub3d9\uc644\uc131)",
@@ -4339,7 +4784,7 @@
             "name": "Admin - Auth"
         },
         {
-            "description": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9 \u00b7 \uc0c1\uc138 \u00b7 \uac1c\uc778 \uc804\uc2dc \ub4f1\ub85d.\n\n## \uacf5\ud1b5 \uc751\ub2f5 \ud3ec\ub9f7(ApiResponse)\n\ubaa8\ub4e0 \uc751\ub2f5\uc740 \uc544\ub798 \ubd09\ud22c(envelope)\ub85c \uac10\uc2f8\uc9c4\ub2e4. \uc131\uacf5\uc740 \uc608\uc678 \uc5c6\uc774 HTTP 200\uc774\uba70(\ud504\ub85c\uc81d\ud2b8 \ucee8\ubca4\uc158 \u2014 201 \ubbf8\uc0ac\uc6a9),\n\uc2e4\ud328\ub294 \uc5d0\ub7ec\uc758 HTTP \uc0c1\ud0dc \ucf54\ub4dc\uc640 \ud568\uaed8 meta.result=FAIL \u00b7 meta.errorCode \u00b7 meta.message\uac00 \ub0b4\ub824\uac04\ub2e4.\n```\n{\n  \"meta\": { \"result\": \"SUCCESS\" | \"FAIL\", \"errorCode\": string | null, \"message\": string | null },\n  \"data\": <T> | null\n}\n```\n\uac80\uc99d(Bean Validation) \uc2e4\ud328\ub294 \uc704 \ud3ec\ub9f7\uc758 data\uc5d0 \ud544\ub4dc\ubcc4 \uc624\ub958 \ubc30\uc5f4\uc774 \ucd94\uac00\ub85c \ub2f4\uae34\ub2e4:\n```\n\"data\": [ { \"field\": \"title\", \"value\": \"\", \"reason\": \"\uacf5\ubc31\uc77c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4\" } ]\n```\n\n## \uacf5\ud1b5 \uc5d0\ub7ec \ucf54\ub4dc(ErrorType)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| INVALID_INPUT | 400 | \uc694\uccad \ud30c\ub77c\ubbf8\ud130/\ubc14\ub514\uac00 \uc62c\ubc14\ub974\uc9c0 \uc54a\uc74c(\ud615\uc2dd \uc624\ub958\u00b7\ubbf8\uc815\uc758 enum \ucf54\ub4dc \ub4f1) |\n| INVALID_CURSOR | 400 | \ucee4\uc11c-\uc870\uac74 \ubd88\uc77c\uce58\u00b7\uc190\uc0c1\ub41c \ucee4\uc11c |\n| UNAUTHORIZED | 401 | \uc778\uc99d(Bearer access \ud1a0\ud070)\uc774 \ud544\uc694\ud558\uac70\ub098 \ubb34\ud6a8\ud568 |\n| FORBIDDEN | 403 | \uc778\uc99d\uc740 \ub410\uc73c\ub098 \ud574\ub2f9 \ub9ac\uc18c\uc2a4 \uc811\uadfc \uad8c\ud55c\uc774 \uc5c6\uc74c |\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \ub9ac\uc18c\uc2a4\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| METHOD_NOT_ALLOWED | 405 | \ud5c8\uc6a9\ub418\uc9c0 \uc54a\uc740 HTTP \uba54\uc11c\ub4dc |\n| INTERNAL_ERROR | 500 | \uc11c\ubc84 \ub0b4\ubd80 \uc624\ub958 |\n\n## \uc804\uc2dc \ub3c4\uba54\uc778 \uc5d0\ub7ec \ucf54\ub4dc(ExhibitionErrorCode)\n| errorCode | HTTP | \uc758\ubbf8 |\n|---|---|---|\n| NOT_FOUND | 404 | \uc694\uccad\ud55c \uc804\uc2dc\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc74c |\n| EXTERNAL_API_UNAVAILABLE | 503 | \uc678\ubd80 \uc804\uc2dc \uc815\ubcf4(\ubb38\ud654\ud3ec\ud138 \ub4f1)\ub97c \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc74c |\n",
+            "description": "\uc804\uc2dc \ubaa9\ub85d/\ud0d0\uc0c9 \u00b7 \uc0c1\uc138 \u00b7 \uac1c\uc778 \uc804\uc2dc \ub4f1\ub85d.",
             "name": "Exhibition"
         },
         {
