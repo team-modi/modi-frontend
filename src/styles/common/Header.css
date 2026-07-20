@@ -6,7 +6,6 @@
   height: var(--header-height);
   display: flex;
   align-items: center;
-  background: var(--color-pill-bg);
   z-index: 100;
 }
 

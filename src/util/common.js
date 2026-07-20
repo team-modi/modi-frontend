@@ -38,6 +38,23 @@ export function formatDateDot(dateKey) {
   return `${year}. ${month}. ${day}`;
 }
 
+// "YYYY-MM-DD" -> "YY.MM.DD" (목록 행처럼 폭이 좁은 자리용)
+export function formatShortDateDot(dateKey) {
+  if (!dateKey) return "";
+  const [year, month, day] = dateKey.split("-");
+  if (!year || !month || !day) return dateKey;
+  return `${year.slice(2)}.${month}.${day}`;
+}
+
+// 시작일~종료일 "YY.MM.DD ~ YY.MM.DD"
+export function formatShortDateRange(startDate, endDate) {
+  const start = formatShortDateDot(startDate);
+  const end = formatShortDateDot(endDate);
+  if (!start) return end;
+  if (!end) return start;
+  return `${start} ~ ${end}`;
+}
+
 // 시작일~종료일 "YYYY.MM.DD ~ YYYY.MM.DD"
 export function formatDateRange(startDate, endDate) {
   const start = formatDateDot(startDate);
@@ -45,6 +62,16 @@ export function formatDateRange(startDate, endDate) {
   if (!start) return end;
   if (!end) return start;
   return `${start} ~ ${end}`;
+}
+
+// 오늘 기준 남은 일수("YYYY-MM-DD")
+export function getDaysUntil(dateString) {
+  if (!dateString) return null;
+  const [year, month, day] = dateString.split("-").map(Number);
+  const target = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 export function formatElapsed(dateInput) {

@@ -24,9 +24,12 @@
   height: 36px;
   border-radius: 999px;
   border: none;
-  background-color: var(--color-brand-subtle);
-  color: var(--color-icon-primary);
+  background-color: #0e111a;
   cursor: pointer;
+}
+
+.exhibit-list-header-filter img {
+  filter: brightness(0) invert(1);
 }
 
 /* SortDropdown.jsx */
@@ -42,7 +45,6 @@
   padding: 8px 14px;
   border-radius: 999px;
   border: none;
-  background-color: var(--color-brand-subtle);
   color: var(--color-text-primary);
   cursor: pointer;
 }
@@ -68,7 +70,7 @@
   padding: 10px 12px;
   border: none;
   background: none;
-  text-align: left;
+  text-align: center;
   color: var(--color-text-secondary);
   border-radius: 8px;
   cursor: pointer;
@@ -79,6 +81,7 @@
 }
 
 .sort-dropdown-item.is-selected {
-  color: var(--color-accent-primary);
+  color: #07090f;
+  background-color: #f8f8fa;
   font-weight: var(--fw-semibold);
 }

@@ -5,9 +5,33 @@
   gap: 16px;
 }
 
+/* 기록 / 리마인드 탭 — 화면 폭을 반씩 나눠 갖고, 활성 탭만 아래에 굵은 선 */
+.archive-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.archive-tab {
+  flex: 1;
+  padding: 14px 0;
+  color: var(--color-text-tertiary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.archive-tab.is-active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-brand-primary);
+}
+
 .archive-sort-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.archive-count {
+  color: var(--color-text-secondary);
 }
 
 .archive-grid {

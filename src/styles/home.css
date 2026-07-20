@@ -14,7 +14,7 @@
 .home-section-vertical {
   display: flex;
   flex-direction: column;
-  gap: 23px;
+  gap: 20px;
 }
 
 .home-section-row {
@@ -56,14 +56,14 @@
   position: relative;
   flex: 0 0 100%;
   min-width: 0;
-  aspect-ratio: 4 / 5;
+  /* aspect-ratio: 4 / 5; */
   overflow: hidden;
 }
 
 .banner-slide img {
   width: var(--app-width);
-  height: 100%;
-  object-fit: cover;
+  height: 372px;
+  /* object-fit: cover; */
   display: block;
   background: var(--color-surface-2, #e8e8e8);
 }

@@ -74,7 +74,9 @@ const ExhibitionList = ({ type, data }) => {
                 title={exhibit.title}
                 place={exhibit.place}
                 startDate={exhibit.startDate}
+                endDate={exhibit.endDate}
                 exhibitionId={exhibit.exhibitionId}
+                bookmarked={exhibit.bookmarked}
               />
             ))}
           </div>
@@ -89,6 +91,7 @@ const ExhibitionList = ({ type, data }) => {
                 startDate={exhibit.startDate}
                 endDate={exhibit.endDate}
                 exhibitionId={exhibit.exhibitionId}
+                bookmarked={exhibit.bookmarked}
               />
             ))}
           </div>

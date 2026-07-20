@@ -32,7 +32,14 @@ const Header = ({ type, title, onBack }) => {
       <header className="app-header app-header--archive">
         <h1 className="header-title-left text-heading-1">{title}</h1>
         <div className="header-right-slot">
-          <div className="header-right-placeholder" />
+          <button
+            type="button"
+            className="header-icon-btn"
+            onClick={() => navigate("/notifications")}
+            aria-label="알림"
+          >
+            <img src={bellIcon} alt="" width={20} height={20} />
+          </button>
         </div>
       </header>
     );

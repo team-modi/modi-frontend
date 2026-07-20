@@ -1,28 +1,147 @@
-.detail-record-poster {
+/* 상단 히어로 캐러셀은 헤더 자리까지 끌어올려 풀블리드로 깐다. */
+.detail-record-content-area {
+  padding-top: 0;
+}
+
+.detail-record-hero {
+  position: relative;
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: 16px;
+  aspect-ratio: 3 / 4;
+  background-color: #1a1c22;
+  overflow: hidden;
+}
+
+.detail-record-hero-viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.detail-record-hero-container {
+  display: flex;
+  height: 100%;
+}
+
+.detail-record-hero-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+}
+
+.detail-record-hero-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-record-hero-empty {
+  width: 100%;
+  height: 100%;
   background-color: var(--color-brand-subtle);
-  background-size: cover;
-  background-position: center;
+}
+
+/* 상단 좌우 오버레이 버튼 (반투명 원형) */
+.detail-record-hero-btn {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-disabled);
-  margin-bottom: 20px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-primary);
+  z-index: 2;
+}
+
+.detail-record-hero-back {
+  left: 12px;
+}
+
+.detail-record-menu {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  right: 12px;
+  z-index: 2;
+}
+
+.detail-record-hero-more {
+  position: static;
+  top: auto;
+}
+
+.detail-record-menu-list {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  min-width: 120px;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  border-radius: 12px;
+  background-color: var(--color-surface-default);
+  box-shadow: 0 6px 20px rgba(20, 22, 28, 0.16);
+}
+
+.detail-record-menu-item {
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: 8px;
+  color: var(--color-text-primary);
+}
+
+.detail-record-menu-item--danger {
+  color: var(--color-status-error);
+}
+
+.detail-record-hero-counter {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: rgba(20, 22, 28, 0.55);
+  color: #ffffff;
+  z-index: 2;
+}
+
+/* 포스터 썸네일 — 히어로 하단에 겹쳐 올린다. */
+.detail-record {
+  position: relative;
+}
+
+.detail-record-poster {
+  width: 112px;
+  aspect-ratio: 3 / 4;
+  margin: -56px auto 16px;
+  border-radius: 8px;
+  background-color: var(--color-brand-subtle);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 16px rgba(20, 22, 28, 0.18);
 }
 
 .detail-record-head {
-  margin-bottom: 32px;
+  text-align: center;
+}
+
+/* 제목·날짜 블록과 감정 키워드 섹션을 화면 폭 전체를 쓰는 옅은 띠로 끊는다. */
+.detail-record-divider {
+  height: 8px;
+  margin: 24px -20px 32px;
+  background-color: var(--color-bg-default);
 }
 
 .detail-record-title {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: var(--color-text-primary);
 }
 
 .detail-record-artist {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   color: var(--color-text-tertiary);
 }
 
@@ -42,12 +161,12 @@
 
 .detail-record-content {
   margin: 0;
-  padding: 16px;
-  border-radius: 14px;
+  padding: 20px 16px;
+  border-radius: 12px;
   background-color: var(--color-bg-default);
   color: var(--color-text-secondary);
   white-space: pre-line;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .detail-record-emotion-chips {
@@ -57,31 +176,37 @@
 }
 
 .detail-record-emotion-chip {
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--color-border-default);
-  background-color: var(--color-surface-default);
-  color: var(--color-text-secondary);
+  padding: 8px 14px;
+  border-radius: 8px;
+  background-color: var(--color-accent-subtle);
+  color: var(--color-text-brand);
 }
 
-.detail-record-media-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+.detail-record-delete-title {
+  margin: 0 0 8px;
+  color: var(--color-text-primary);
 }
 
-.detail-record-media-thumb {
-  position: relative;
-  aspect-ratio: 1;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: var(--color-brand-subtle);
+.detail-record-delete-desc {
+  margin: 0 0 20px;
+  color: var(--color-text-tertiary);
 }
 
-.detail-record-media-thumb-media {
+.detail-record-delete-confirm {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding: 16px 0;
+  border-radius: 14px;
+  background-color: var(--color-status-error);
+  color: var(--color-text-inverse);
+  margin-bottom: 8px;
+}
+
+.detail-record-delete-cancel {
+  width: 100%;
+  padding: 16px 0;
+  border-radius: 14px;
+  background-color: var(--color-bg-default);
+  color: var(--color-text-primary);
 }
 
 .detail-record-loading {

@@ -45,7 +45,7 @@ export default function SortDropdown({ value, onChange, options = DEFAULT_SORT_O
             <li key={option.value}>
               <button
                 type="button"
-                className={`sort-dropdown-item text-label-2 ${option.value === value ? "is-selected" : ""}`}
+                className={`sort-dropdown-item text-label-4 ${option.value === value ? "is-selected" : ""}`}
                 onClick={() => handleSelect(option)}
               >
                 {option.label}
@@ -57,4 +57,3 @@ export default function SortDropdown({ value, onChange, options = DEFAULT_SORT_O
     </div>
   );
 }
-
