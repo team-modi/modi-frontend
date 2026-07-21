@@ -41,7 +41,7 @@ export default function VenueSearchPanel({ isOpen, onClose, onSelect }) {
 
   return (
     <div className="venue-search-panel">
-      <Header type="sub" title="전시관 검색" onBack={onClose} />
+      <Header type="back" title="전시관 선택" onBack={onClose} />
       <div className="venue-search-panel-body">
         <div className="venue-search-input-box">
           <input

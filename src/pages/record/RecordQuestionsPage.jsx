@@ -133,7 +133,7 @@ export default function RecordQuestionsPage() {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="기록 작성" onBack={() => navigate(-1)} />
+      <Header type="back" title="질문으로 작성" onBack={() => navigate(-1)} />
       <div className="app-content">
         <div className="app-content-pad record-questions">
           <StepDots total={TOTAL_STEPS} current={step} />
@@ -166,7 +166,7 @@ export default function RecordQuestionsPage() {
                 className="record-questions-shuffle text-body-2-regular"
                 onClick={handleShuffleQuestion}
               >
-                <img src={refreshIcon} alt="" width={16} height={16} /> 다른 질문 보기
+                다른 질문 보기 <img src={refreshIcon} alt="" width={16} height={16} />
               </button>
             </>
           )}
