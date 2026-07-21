@@ -59,12 +59,6 @@ export const composeRecord = async (exhibitionId, answers) => {
 // axios는 스트림 소비가 어려워 fetch + ReadableStream 으로 직접 SSE 를 파싱한다.
 // 서버 이벤트: delta(생성 조각) 여러 번 → done(완료) | error(사용자 메시지).
 export const composeRecordStream = async (exhibitionId, answers, { onDelta, signal } = {}) => {
-  // 개발용 목: 전역 훅이 있으면 사용한다. 훅은 개발 전용 코드(로컬 목 셋업)에서만 심으며,
-  // 운영 번들에는 훅을 심는 코드가 없어 항상 아래 실제 스트리밍으로 동작한다.
-  if (import.meta.env.DEV && typeof window !== "undefined" && typeof window.__composeStreamMock === "function") {
-    return window.__composeStreamMock({ exhibitionId, answers, onDelta, signal });
-  }
-
   const response = await fetch("/api/v1/records/ai/compose/stream", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
