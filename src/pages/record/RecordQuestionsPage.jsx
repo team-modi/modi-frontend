@@ -6,7 +6,7 @@ import Header from "@components/common/Header";
 import StepDots from "@components/record/StepDots";
 
 // api
-import { getRecordQuestions, composeRecord, getRecordDraft, saveRecordDraft } from "@api/record";
+import { getRecordQuestions, composeRecord, getRecordDraft } from "@api/record";
 
 // store
 import { useRecordDraftStore } from "@store/useRecordDraftStore";
@@ -36,14 +36,21 @@ export default function RecordQuestionsPage() {
   const [step, setStep] = useState(0);
   const [isComposing, setIsComposing] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
-  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
+  // 로딩은 "질문이 없고, 생성할 전시가 있는" 경우에만 시작한다.
+  // 새로고침 복원(질문 있음)·전시 없이 직접 진입(생성 불가)이면 처음부터 로딩 아님.
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(questions.length === 0 && Boolean(exhibitionId));
 
   useEffect(() => {
+    // 이미 질문이 있으면(새로고침 복원 등) 재생성하지 않는다 — 느린 AI 재호출 방지.
+    // 전시 선택 없이 직접 진입한 경우도 생성 불가 — 무한 로딩 방지.
+    if (questions.length > 0 || !exhibitionId) return;
+
     let ignore = false;
 
     (async () => {
       setIsLoadingQuestions(true);
       try {
+        // 다른 기기/세션에서 이어가는 경우 서버 draft(백엔드가 질문 생성 시 자동 저장)로 먼저 복원 시도.
         const draftResponse = await getRecordDraft(exhibitionId);
         const draft = draftResponse.data.data;
 
@@ -70,21 +77,9 @@ export default function RecordQuestionsPage() {
     return () => {
       ignore = true;
     };
-  }, [exhibitionId, questions.length, setQuestions, setAnswer, setContent]);
-
-  useEffect(() => {
-    if (!exhibitionId || questions.length === 0) return;
-
-    const timer = setTimeout(() => {
-      saveRecordDraft({
-        exhibitionId,
-        questions,
-        answers: questions.map((question, index) => ({ question, answer: answers[index] ?? "" })),
-      }).catch((error) => console.log(error));
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [exhibitionId, questions, answers]);
+    // 최초 1회만 — 이후 질문/답변은 스토어(sessionStorage)로 유지된다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exhibitionId]);
 
   const handleShuffleQuestion = async () => {
     if (isShuffling) return; // 연타 방지 — 매 호출이 rate-limit 걸리는 유료 AI 요청
@@ -128,12 +123,7 @@ export default function RecordQuestionsPage() {
       );
       const composedText = response.data.data.content ?? response.data.data.text ?? "";
       setContent(composedText);
-      saveRecordDraft({
-        exhibitionId,
-        questions,
-        answers: questions.map((question, index) => ({ question, answer: answers[index] ?? "" })),
-        content: composedText,
-      }).catch((error) => console.log(error));
+      // 서버 draft는 백엔드 compose()가 이미 저장한다(질문+답변+초안). 여기서 또 저장하지 않는다.
       navigate("/record/compose");
     } catch (error) {
       console.log(error);

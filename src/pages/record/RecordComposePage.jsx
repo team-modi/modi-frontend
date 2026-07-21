@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // components
 import Header from "@components/common/Header";
 
 // api
-import { addRecord, composeRecord, saveRecordDraft, deleteRecordDraft } from "@api/record";
+import { addRecord, composeRecord, deleteRecordDraft } from "@api/record";
 
 // store
 import { useRecordDraftStore } from "@store/useRecordDraftStore";
@@ -37,20 +37,8 @@ export default function RecordComposePage() {
   const [isRefining, setIsRefining] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!exhibitionId || !content.trim()) return;
-
-    const timer = setTimeout(() => {
-      saveRecordDraft({
-        exhibitionId,
-        questions,
-        answers: questions.map((question, index) => ({ question, answer: answers[index] ?? "" })),
-        content,
-      }).catch((error) => console.log(error));
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [exhibitionId, questions, answers, content]);
+  // 편집 중인 초안은 스토어(sessionStorage)로 유지된다 — 새로고침에도 복원. 키 입력마다 서버 저장하지 않는다.
+  // 서버 draft는 백엔드 compose()/"다시 다듬기" 호출 시 자동 저장된다.
 
   const handleRefine = async () => {
     setIsRefining(true);
