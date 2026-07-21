@@ -117,7 +117,7 @@ export default function ArchivePage() {
 
   return (
     <div className="app-shell">
-      <Header type="archive" title="아카이브" />
+      <Header type="notification" title="아카이브" />
       <div className="app-content">
         <div className="archive-tabs" role="tablist">
           {Object.entries(TABS).map(([key, value]) => (

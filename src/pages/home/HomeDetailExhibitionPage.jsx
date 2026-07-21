@@ -17,7 +17,7 @@ const HomeDetailExhibitionPage = () => {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title={title} />
+      <Header type="back" title={title} />
       <div className="app-content">
         <div className="app-content-pad">
           <ExhibitionList data={{ section }} type={type === "new" ? "row" : ""} />

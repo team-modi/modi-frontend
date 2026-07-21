@@ -17,7 +17,7 @@ const ExhibitionPage = () => {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="전시탐색" />
+      <Header type="bookmark" title="전시탐색" />
       <div className="app-content">
         <div className="app-content-pad exhibition-body">
           <SearchBox

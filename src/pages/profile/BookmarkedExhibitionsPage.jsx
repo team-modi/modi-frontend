@@ -91,7 +91,7 @@ export default function BookmarkedExhibitionsPage() {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="관심 전시" />
+      <Header type="back" title="관심 전시" />
       <div className="app-content">
         <div className="app-content-pad exhibit-list-body">
           <div className="exhibit-list-sort-row">
