@@ -51,7 +51,7 @@ export default function RecordWritePage() {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="기록 작성" onBack={() => navigate(-1)} />
+      <Header type="back" title="직접 작성" onBack={() => navigate(-1)} />
       <div className="app-content">
         <div className="app-content-pad record-write">
           <h1 className="record-write-title text-title-3">

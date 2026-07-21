@@ -61,7 +61,7 @@ export default function RecordDetailInputPage() {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="기록 작성" onBack={() => navigate(-1)} />
+      <Header type="back" title="관람 정보 기록" onBack={() => navigate(-1)} />
       <div className="app-content">
         <div className="app-content-pad record-detail">
           <div className="record-detail-summary">
@@ -126,7 +126,7 @@ export default function RecordDetailInputPage() {
           </section>
 
           <section className="record-detail-section">
-            <h2 className="record-detail-section-title text-heading-2">내가 바라본 전시</h2>
+            <h2 className="record-detail-section-title text-heading-2">기억에 남은 장면</h2>
             <p className="record-detail-section-desc text-body-2-regular">
               전시를 떠올릴 수 있는 장면이 있다면 추가해 주세요
             </p>

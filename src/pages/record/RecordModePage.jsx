@@ -22,7 +22,7 @@ export default function RecordModePage() {
 
   return (
     <div className="app-shell">
-      <Header type="sub" title="기록 작성" onBack={() => navigate(-1)} />
+      <Header type="back" title="기록 작성" onBack={() => navigate(-1)} />
       <div className="app-content">
         <div className="app-content-pad record-mode">
           <h1 className="record-mode-title text-title-3">어떻게 기록할까요?</h1>

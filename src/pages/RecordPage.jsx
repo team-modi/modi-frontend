@@ -24,7 +24,7 @@ function formatDateDot(dateString) {
   return dateString ? dateString.replaceAll("-", ".") : "";
 }
 
-const RecordPage = ({ pageTitle = "전시 추가", initialValues = null, onSubmit }) => {
+const RecordPage = ({ initialValues = null, onSubmit }) => {
   const navigate = useNavigate();
   const setExhibitionDraft = useRecordDraftStore((state) => state.setExhibitionDraft);
   const setExhibitionId = useRecordDraftStore((state) => state.setExhibitionId);
@@ -117,7 +117,7 @@ const RecordPage = ({ pageTitle = "전시 추가", initialValues = null, onSubmi
 
   return (
     <div className="app-shell">
-      <Header type="sub" title={pageTitle} onBack={() => navigate(-1)} />
+      <Header type="back" title="전시 직접 추가" onBack={() => navigate(-1)} />
       <div className="app-content">
         <div className="app-content-pad record-form">
           <h1 className="record-form-guide text-title-3">전시 정보를 입력해 주세요</h1>
