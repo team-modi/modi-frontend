@@ -1,5 +1,6 @@
 // 아카이브 페이지 — 기록 / 리마인드 두 탭
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 // components
 import Header from "@components/common/Header";
@@ -33,7 +34,9 @@ const TABS = {
 };
 
 export default function ArchivePage() {
-  const [tab, setTab] = useState("record");
+  // 탭을 URL 쿼리에 실어, 상세로 갔다가 뒤로가도 보던 탭이 복원되게 한다.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") === "remind" ? "remind" : "record";
   const [sort, setSort] = useState("latest");
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(0);
@@ -110,9 +113,10 @@ export default function ArchivePage() {
 
   const handleTabChange = (nextTab) => {
     if (nextTab === tab) return;
-    setTab(nextTab);
     setItems([]);
     setTotalCount(0);
+    // replace로 바꿔 탭 전환이 히스토리를 늘리지 않게 한다(뒤로가기는 아카이브 이전 화면으로).
+    setSearchParams(nextTab === "remind" ? { tab: "remind" } : {}, { replace: true });
   };
 
   return (
@@ -166,6 +170,7 @@ export default function ArchivePage() {
                         key={remind.remindId}
                         type="vertical"
                         recordId={remind.recordId}
+                        remindId={remind.remindId}
                         thumbnail={remind.posterUrl}
                         viewedAt={remind.viewedAt}
                         title={remind.exhibitionTitle}
